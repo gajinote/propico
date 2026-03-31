@@ -23,3 +23,13 @@ Search(prefix): 入力中の文字列から候補を返す。
 Learn(candidate_id): 選択された候補を学習し、優先度を上げる。
 
 Sync(): 別の端末で学習した内容を同期する（将来用）。
+
+## ディレクトリ構成
+pobox-neo/
+├── CMakeLists.txt
+├── pobox.proto
+├── src/
+│   ├── server/main.cc   ← 次に作成するファイル
+│   └── client/main.cc   ← 次に作成するファイル
+└── tests/
+    └── *.cc             ← CPPUnit テスト
