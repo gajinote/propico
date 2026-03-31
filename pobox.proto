@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package pobox;
+
+option java_package = "jp.pobox.proto";
+option java_multiple_files = true;
+option objc_class_prefix = "PBX";
+
+// POBox 予測入力エンジン サービス定義
+service PoBox {
+  // 入力中の文字列（プレフィックス）から候補リストを返す
+  rpc Search(SearchRequest) returns (SearchResponse);
+
+  // ユーザーが選択した候補を学習し、優先度を更新する
+  rpc Learn(LearnRequest) returns (LearnResponse);
+
+  // 他端末で学習した内容をサーバーと同期する（将来用）
+  rpc Sync(SyncRequest) returns (SyncResponse);
+}
+
+// ----- Search -----
+
+message SearchRequest {
+  // 入力中のプレフィックス文字列（ひらがな・ローマ字など）
+  string prefix = 1;
+
+  // 返す候補の最大件数（0 の場合はサーバーのデフォルトを使用）
+  uint32 max_candidates = 2;
+}
+
+message Candidate {
+  // 候補を一意に識別する ID（Learn で使用）
+  string id = 1;
+
+  // 表示テキスト（漢字・かな交じり文など）
+  string text = 2;
+
+  // 読み（ひらがな）
+  string reading = 3;
+
+  // スコア（値が大きいほど優先度が高い）
+  float score = 4;
+}
+
+message SearchResponse {
+  // プレフィックスにマッチした候補リスト（スコア降順）
+  repeated Candidate candidates = 1;
+}
+
+// ----- Learn -----
+
+message LearnRequest {
+  // 学習対象の候補 ID（SearchResponse.Candidate.id）
+  string candidate_id = 1;
+
+  // この候補が選択されたときの入力プレフィックス
+  string prefix = 2;
+}
+
+message LearnResponse {
+  // 学習が成功したかどうか
+  bool success = 1;
+
+  // エラーメッセージ（success=false のときのみ設定）
+  string error_message = 2;
+}
+
+// ----- Sync -----
+
+message SyncRequest {
+  // クライアントが持つ最終同期タイムスタンプ（Unix 秒）
+  // 0 の場合は全データを要求する
+  int64 last_sync_timestamp = 1;
+}
+
+message SyncResponse {
+  // 同期完了後のサーバー側タイムスタンプ（Unix 秒）
+  int64 server_timestamp = 1;
+
+  // サーバー側で更新された候補の差分
+  repeated Candidate updated_candidates = 2;
+}
