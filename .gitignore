@@ -1,3 +1,9 @@
 .claude/*.*
 
 CLAUDE.md
+
+build/pobox_server
+build/pobox_client
+
+*.o
+*.a

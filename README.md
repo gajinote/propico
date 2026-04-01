@@ -5,7 +5,32 @@
 **pobox-neo**は、1990年代後半に開発された予測式日本語入力エンジン「POBox」を、最新のC++（2026）で再実装したものです。その目的は、POBoxの核心となる理念（軽量で予測ベースのテキスト入力）を、現代のC++標準に適合させることにあります。
 
 ## ビルド、テスト、およびリンティング
-まだビルドシステムは設定されていません。追加されたら、ここにコマンドを記載してください。候補としては、C++用のCMake、Meson、またはBazelが考えられます。
+
+### 依存パッケージ (Ubuntu / Debian)
+
+```bash
+sudo apt install -y \
+  libprotobuf-dev \
+  protobuf-compiler \
+  libgrpc++-dev \
+  libgrpc-dev \
+  protobuf-compiler-grpc
+```
+
+| パッケージ | 役割 |
+|---|---|
+| `libprotobuf-dev` | Protocol Buffers C++ ライブラリ・ヘッダ |
+| `protobuf-compiler` | `protoc` コマンド（`.proto` → C++ 変換） |
+| `libgrpc++-dev` | gRPC C++ ライブラリ・ヘッダ |
+| `libgrpc-dev` | gRPC コアライブラリ |
+| `protobuf-compiler-grpc` | `grpc_cpp_plugin`（gRPC スタブ生成） |
+
+### ビルド手順
+
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+```
 
 ## アーキテクチャ
 プロジェクトは初期段階にあります。コードベースが拡大するにつれ、予測エンジンの動作、候補ランキングに使用されるデータ構造、入力シーケンスが候補にどのようにマッピングされるかなど、アーキテクチャ上の決定事項をここに記録してください。

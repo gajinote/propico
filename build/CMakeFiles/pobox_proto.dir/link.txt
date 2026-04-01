@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpobox_proto.a CMakeFiles/pobox_proto.dir/proto/pobox.pb.cc.o CMakeFiles/pobox_proto.dir/proto/pobox.grpc.pb.cc.o
+/usr/bin/ranlib libpobox_proto.a

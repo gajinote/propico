@@ -1,0 +1,5 @@
+/home/seigen/workspace/pobox-neo/build/CMakeFiles/pobox_proto.dir
+/home/seigen/workspace/pobox-neo/build/CMakeFiles/pobox_server.dir
+/home/seigen/workspace/pobox-neo/build/CMakeFiles/pobox_client.dir
+/home/seigen/workspace/pobox-neo/build/CMakeFiles/edit_cache.dir
+/home/seigen/workspace/pobox-neo/build/CMakeFiles/rebuild_cache.dir
