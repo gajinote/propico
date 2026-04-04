@@ -48,15 +48,52 @@ POBox のアーキテクチャは、フロントエンド予測とバックエ�
 pobox-neo/
 ├── CMakeLists.txt
 ├── pobox.proto
+├── dict/
+│   └── default.tsv          ← デフォルト辞書（読み\t表記\t基本スコア）
 ├── src/
 │   ├── server/main.cc       ← gRPC サーバー（変換エンジン）
 │   ├── client/main.cc       ← CLI クライアント（テスト用）
-│   └── engine/              ← 予測エンジン本体（Phase 2 以降）
-│       ├── dictionary.h/.cc ← 辞書の読み込み・検索
-│       ├── history.h/.cc    ← 入力履歴・学習ストレージ
-│       └── scorer.h/.cc     ← 候補スコアリング
+│   └── engine/
+│       ├── candidate.h      ← Candidate 内部表現（id/text/reading/score）
+│       ├── dictionary.h/.cc ← TSV 辞書の読み込み・前方一致検索
+│       └── scorer.h/.cc     ← 辞書スコア + 学習 boost の統合
 └── tests/                   ← CPPUnit テスト
 ```
+
+### エンジンコンポーネント詳細
+
+#### `engine/candidate.h` — 内部 Candidate 型
+
+`pobox::engine::Candidate` は辞書検索からスコア確定までの内部表現です。
+proto の `pobox::Candidate` とは独立しており、サーバーが RPC レスポンスを構築する際に変換します。
+
+```
+id         : "reading:text" 形式の安定識別子（Learn RPC で使用）
+text       : 表示テキスト（漢字・かな交じり文など）
+reading    : 読み（ひらがな）
+base_score : 辞書由来の基本スコア（0.0〜1.0）
+boost      : 学習による加算分（Phase 3 で SQLite から設定）
+final_score: base_score + boost
+```
+
+#### `engine/dictionary.h/.cc` — TSV 辞書
+
+起動時に TSV ファイルを読み込み、`reading` でソートして保持します。
+検索は `std::ranges::lower_bound` による前方一致で O(log N + 結果数) です。
+
+```
+辞書フォーマット（1行）: reading TAB text TAB base_score
+例: あい\t愛\t0.95
+```
+
+#### `engine/scorer.h/.cc` — スコア統合
+
+```
+final_score = base_score + boost
+boost       = log(1 + 選択回数) × decay_factor  (デフォルト: 0.1)
+```
+
+辞書検索結果に boost を適用し、`final_score` 降順で並べ替えて返します。
 
 ---
 

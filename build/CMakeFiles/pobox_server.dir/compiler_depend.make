@@ -4,6 +4,9 @@
 CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-neo/src/server/main.cc \
   proto/pobox.grpc.pb.h \
   proto/pobox.pb.h \
+  /home/seigen/workspace/pobox-neo/src/engine/candidate.h \
+  /home/seigen/workspace/pobox-neo/src/engine/dictionary.h \
+  /home/seigen/workspace/pobox-neo/src/engine/scorer.h \
   /usr/include/absl/base/attributes.h \
   /usr/include/absl/base/config.h \
   /usr/include/absl/base/const_init.h \
@@ -71,6 +74,10 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
   /usr/include/c++/13/bits/exception.h \
   /usr/include/c++/13/bits/exception_defines.h \
   /usr/include/c++/13/bits/exception_ptr.h \
+  /usr/include/c++/13/bits/fs_dir.h \
+  /usr/include/c++/13/bits/fs_fwd.h \
+  /usr/include/c++/13/bits/fs_ops.h \
+  /usr/include/c++/13/bits/fs_path.h \
   /usr/include/c++/13/bits/functexcept.h \
   /usr/include/c++/13/bits/functional_hash.h \
   /usr/include/c++/13/bits/hash_bytes.h \
@@ -164,6 +171,7 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
   /usr/include/c++/13/climits \
   /usr/include/c++/13/clocale \
   /usr/include/c++/13/cmath \
+  /usr/include/c++/13/codecvt \
   /usr/include/c++/13/compare \
   /usr/include/c++/13/concepts \
   /usr/include/c++/13/cstddef \
@@ -184,6 +192,7 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
   /usr/include/c++/13/ext/numeric_traits.h \
   /usr/include/c++/13/ext/string_conversions.h \
   /usr/include/c++/13/ext/type_traits.h \
+  /usr/include/c++/13/filesystem \
   /usr/include/c++/13/format \
   /usr/include/c++/13/functional \
   /usr/include/c++/13/initializer_list \
@@ -560,11 +569,15 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
-/usr/include/google/protobuf/extension_set.h:
+/usr/include/x86_64-linux-gnu/sys/time.h:
 
-/usr/include/google/protobuf/descriptor_database.h:
+/usr/include/x86_64-linux-gnu/sys/syscall.h:
 
-/usr/include/google/protobuf/descriptor.pb.h:
+/usr/include/x86_64-linux-gnu/sys/cdefs.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/time_members.h:
 
 /usr/include/google/protobuf/arenastring.h:
 
@@ -601,8 +614,6 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 /usr/include/c++/13/stdlib.h:
-
-/usr/include/c++/13/sstream:
 
 /usr/include/c++/13/set:
 
@@ -657,6 +668,8 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 /usr/include/google/protobuf/descriptor.h:
 
 /usr/include/grpcpp/support/client_callback.h:
+
+/usr/include/c++/13/filesystem:
 
 /usr/include/c++/13/ctime:
 
@@ -750,23 +763,27 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 
 /usr/include/absl/synchronization/internal/create_thread_identity.h:
 
+/usr/include/x86_64-linux-gnu/gnu/stubs.h:
+
+/usr/include/c++/13/bits/erase_if.h:
+
 /usr/include/grpcpp/security/tls_certificate_provider.h:
 
 /usr/include/c++/13/bits/stl_iterator_base_types.h:
 
 /usr/include/grpc/impl/codegen/port_platform.h:
 
-/usr/include/c++/13/iosfwd:
+/usr/include/c++/13/utility:
 
-/usr/include/grpcpp/security/server_credentials.h:
+/usr/include/c++/13/tr1/beta_function.tcc:
 
-/usr/include/x86_64-linux-gnu/bits/endianness.h:
+/usr/include/google/protobuf/map.h:
 
-/usr/include/absl/strings/string_view.h:
+/usr/include/c++/13/bits/utility.h:
 
-/usr/include/grpc/impl/codegen/grpc_types.h:
+/usr/include/c++/13/bits/stl_function.h:
 
-/usr/include/x86_64-linux-gnu/bits/math-vector.h:
+/usr/include/c++/13/bits/stl_algobase.h:
 
 /usr/include/c++/13/bits/shared_ptr_base.h:
 
@@ -784,19 +801,9 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 
 /usr/include/assert.h:
 
-/usr/include/google/protobuf/unknown_field_set.h:
-
-/usr/include/c++/13/bits/stl_pair.h:
-
-/usr/include/x86_64-linux-gnu/bits/errno.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
-
 /usr/include/c++/13/array:
 
 /usr/include/c++/13/bits/hash_bytes.h:
-
-/usr/include/google/protobuf/generated_enum_util.h:
 
 /usr/include/absl/base/options.h:
 
@@ -808,15 +815,29 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 
 /usr/include/absl/time/internal/cctz/include/cctz/civil_time.h:
 
+/usr/include/c++/13/bits/stl_bvector.h:
+
+/usr/include/absl/time/clock.h:
+
+/usr/include/absl/base/optimization.h:
+
+/usr/include/c++/13/bits/parse_numbers.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/c++/13/bits/std_abs.h:
+
+/usr/include/absl/synchronization/mutex.h:
+
+/usr/include/grpcpp/support/callback_common.h:
+
+/usr/include/absl/base/policy_checks.h:
+
 /usr/include/c++/13/pstl/execution_defs.h:
 
 /usr/include/grpcpp/impl/codegen/intercepted_channel.h:
 
 /usr/include/absl/base/const_init.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
-
-/usr/include/c++/13/bits/nested_exception.h:
 
 /usr/include/absl/base/internal/thread_identity.h:
 
@@ -824,21 +845,51 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o: /home/seigen/workspace/pobox-n
 
 /usr/include/grpcpp/impl/rpc_service_method.h:
 
-/usr/include/absl/synchronization/mutex.h:
-
-/usr/include/grpcpp/support/callback_common.h:
-
 /usr/include/c++/13/bits/specfun.h:
 
 /usr/include/c++/13/bits/streambuf.tcc:
 
-proto/pobox.grpc.pb.h:
+proto/pobox.pb.h:
 
-/usr/include/grpcpp/impl/call_hook.h:
+/usr/include/c++/13/tr1/riemann_zeta.tcc:
 
-/usr/include/absl/base/internal/throw_delegate.h:
+/usr/include/google/protobuf/arena.h:
 
-/usr/include/absl/time/civil_time.h:
+/usr/include/alloca.h:
+
+/usr/include/absl/base/internal/thread_annotations.h:
+
+/usr/include/c++/13/bit:
+
+/usr/include/c++/13/bits/allocated_ptr.h:
+
+/usr/include/absl/base/internal/low_level_alloc.h:
+
+/usr/include/absl/base/config.h:
+
+/usr/include/stdc-predef.h:
+
+/usr/include/c++/13/sstream:
+
+/usr/include/c++/13/bits/nested_exception.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
+
+/usr/include/c++/13/bits/fs_dir.h:
+
+/usr/include/grpcpp/impl/codegen/config.h:
+
+/usr/include/c++/13/bits/locale_facets_nonio.h:
+
+/usr/include/google/protobuf/util/type_resolver_util.h:
+
+/usr/include/x86_64-linux-gnu/bits/confname.h:
+
+/usr/include/c++/13/variant:
+
+/usr/include/c++/13/bits/atomic_base.h:
+
+/usr/include/grpc/impl/codegen/atm_gcc_atomic.h:
 
 /usr/include/c++/13/bits/concept_check.h:
 
@@ -858,47 +909,43 @@ proto/pobox.grpc.pb.h:
 
 /usr/include/absl/synchronization/internal/per_thread_sem.h:
 
-/usr/include/c++/13/bit:
+/home/seigen/workspace/pobox-neo/src/engine/scorer.h:
 
-/usr/include/c++/13/bits/allocated_ptr.h:
+/usr/include/absl/synchronization/internal/kernel_timeout.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
+/usr/include/c++/13/iomanip:
 
-/usr/include/c++/13/bits/basic_string.tcc:
-
-/usr/include/google/protobuf/endian.h:
-
-/usr/include/alloca.h:
-
-/usr/include/absl/base/internal/thread_annotations.h:
-
-proto/pobox.pb.h:
-
-/usr/include/c++/13/tr1/riemann_zeta.tcc:
-
-/usr/include/google/protobuf/arena.h:
-
-/usr/include/absl/base/internal/low_level_alloc.h:
-
-/usr/include/absl/base/config.h:
-
-/usr/include/stdc-predef.h:
-
-/usr/include/grpcpp/impl/codegen/config.h:
-
-/usr/include/c++/13/bits/locale_facets_nonio.h:
-
-/usr/include/google/protobuf/util/type_resolver_util.h:
-
-/usr/include/x86_64-linux-gnu/bits/confname.h:
-
-/usr/include/c++/13/variant:
-
-/usr/include/c++/13/bits/atomic_base.h:
-
-/usr/include/grpc/impl/codegen/atm_gcc_atomic.h:
+/usr/include/strings.h:
 
 /home/seigen/workspace/pobox-neo/src/server/main.cc:
+
+/home/seigen/workspace/pobox-neo/src/engine/candidate.h:
+
+/usr/include/errno.h:
+
+/usr/include/absl/base/internal/raw_logging.h:
+
+/usr/include/c++/13/bits/functional_hash.h:
+
+/usr/include/absl/time/civil_time.h:
+
+/usr/include/absl/base/internal/throw_delegate.h:
+
+/usr/include/google/protobuf/unknown_field_set.h:
+
+/usr/include/c++/13/bits/stl_pair.h:
+
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
+
+/usr/include/c++/13/bits/fs_path.h:
+
+/home/seigen/workspace/pobox-neo/src/engine/dictionary.h:
+
+proto/pobox.grpc.pb.h:
+
+/usr/include/grpcpp/impl/call_hook.h:
 
 /usr/include/c++/13/unordered_set:
 
@@ -918,19 +965,33 @@ proto/pobox.pb.h:
 
 /usr/include/grpc/slice_buffer.h:
 
+/usr/include/absl/strings/string_view.h:
+
+/usr/include/grpc/impl/codegen/grpc_types.h:
+
+/usr/include/x86_64-linux-gnu/bits/math-vector.h:
+
+/usr/include/c++/13/bits/stl_iterator_base_funcs.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/c++/13/iostream:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/google/protobuf/any.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
+
+/usr/include/absl/base/attributes.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
 
 /usr/include/c++/13/tr1/hypergeometric.tcc:
 
 /usr/include/c++/13/bits/range_access.h:
 
-/usr/include/absl/base/policy_checks.h:
-
-/usr/include/absl/time/clock.h:
-
-/usr/include/linux/errno.h:
-
-/usr/include/c++/13/bits/std_abs.h:
+/usr/include/x86_64-linux-gnu/bits/endianness.h:
 
 /usr/include/c++/13/bits/cxxabi_forced.h:
 
@@ -964,11 +1025,13 @@ proto/pobox.pb.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
 
+/usr/include/grpcpp/security/server_credentials.h:
+
+/usr/include/c++/13/iosfwd:
+
+/usr/include/google/protobuf/extension_set.h:
+
 /usr/include/grpc/support/sync.h:
-
-/usr/include/asm-generic/errno-base.h:
-
-/usr/include/c++/13/bits/stl_iterator_base_funcs.h:
 
 /usr/include/c++/13/bits/ranges_util.h:
 
@@ -980,25 +1043,19 @@ proto/pobox.pb.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
-/usr/include/c++/13/bits/istream.tcc:
-
 /usr/include/c++/13/bits/stl_set.h:
 
 /usr/include/absl/base/log_severity.h:
 
-/usr/include/absl/base/internal/raw_logging.h:
-
-/usr/include/errno.h:
+/usr/include/c++/13/bits/istream.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
 
 /usr/include/c++/13/bits/exception_ptr.h:
 
+/usr/include/c++/13/bits/functexcept.h:
+
 /usr/include/c++/13/bits/node_handle.h:
-
-/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
-
-/usr/include/c++/13/bits/functional_hash.h:
 
 /usr/include/c++/13/bits/hashtable.h:
 
@@ -1018,8 +1075,6 @@ proto/pobox.pb.h:
 
 /usr/include/c++/13/clocale:
 
-/usr/include/x86_64-linux-gnu/sys/syscall.h:
-
 /usr/include/c++/13/bits/locale_classes.h:
 
 /usr/include/c++/13/bits/chrono.h:
@@ -1027,10 +1082,6 @@ proto/pobox.pb.h:
 /usr/include/google/protobuf/io/coded_stream.h:
 
 /usr/include/x86_64-linux-gnu/bits/timesize.h:
-
-/usr/include/google/protobuf/generated_enum_reflection.h:
-
-/usr/include/c++/13/utility:
 
 /usr/include/endian.h:
 
@@ -1040,19 +1091,9 @@ proto/pobox.pb.h:
 
 /usr/include/google/protobuf/port.h:
 
+/usr/include/c++/13/bits/fs_fwd.h:
+
 /usr/include/c++/13/bits/memoryfwd.h:
-
-/usr/include/c++/13/tr1/beta_function.tcc:
-
-/usr/include/google/protobuf/map.h:
-
-/usr/include/c++/13/bits/utility.h:
-
-/usr/include/c++/13/bits/stl_function.h:
-
-/usr/include/google/protobuf/explicitly_constructed.h:
-
-/usr/include/c++/13/numbers:
 
 /usr/include/c++/13/bits/ranges_uninitialized.h:
 
@@ -1063,6 +1104,10 @@ proto/pobox.pb.h:
 /usr/include/c++/13/bits/quoted_string.h:
 
 /usr/include/grpc/impl/codegen/slice.h:
+
+/usr/include/c++/13/bits/stl_construct.h:
+
+/usr/include/grpc/impl/codegen/propagation_bits.h:
 
 /usr/include/c++/13/bits/ranges_algobase.h:
 
@@ -1084,12 +1129,6 @@ proto/pobox.pb.h:
 
 /usr/include/grpcpp/impl/service_type.h:
 
-/usr/include/absl/synchronization/internal/kernel_timeout.h:
-
-/usr/include/c++/13/iomanip:
-
-/usr/include/strings.h:
-
 /usr/include/c++/13/bits/uses_allocator.h:
 
 /usr/include/c++/13/bits/stl_multiset.h:
@@ -1108,29 +1147,23 @@ proto/pobox.pb.h:
 
 /usr/include/c++/13/cstddef:
 
-/usr/include/c++/13/bits/stl_algobase.h:
+/usr/include/google/protobuf/descriptor.pb.h:
 
-/usr/include/c++/13/bits/parse_numbers.h:
+/usr/include/c++/13/bits/basic_string.tcc:
 
-/usr/include/absl/base/optimization.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
-/usr/include/c++/13/bits/stl_bvector.h:
+/usr/include/google/protobuf/descriptor_database.h:
 
-/usr/include/grpc/impl/codegen/propagation_bits.h:
+/usr/include/google/protobuf/endian.h:
 
-/usr/include/c++/13/bits/stl_construct.h:
+/usr/include/c++/13/numbers:
 
-/usr/include/c++/13/bits/functexcept.h:
+/usr/include/google/protobuf/explicitly_constructed.h:
 
-/usr/include/c++/13/iostream:
+/usr/include/google/protobuf/generated_enum_reflection.h:
 
-/usr/include/asm-generic/errno.h:
-
-/usr/include/google/protobuf/any.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
-
-/usr/include/absl/base/attributes.h:
+/usr/include/google/protobuf/generated_enum_util.h:
 
 /usr/include/google/protobuf/has_bits.h:
 
@@ -1159,6 +1192,8 @@ proto/pobox.pb.h:
 /usr/include/google/protobuf/parse_context.h:
 
 /usr/include/google/protobuf/port_def.inc:
+
+/usr/include/c++/13/bits/fs_ops.h:
 
 /usr/include/google/protobuf/stubs/mutex.h:
 
@@ -1254,8 +1289,6 @@ proto/pobox.pb.h:
 
 /usr/include/grpc/impl/codegen/log.h:
 
-/usr/include/x86_64-linux-gnu/sys/time.h:
-
 /usr/include/c++/13/bits/ranges_cmp.h:
 
 /usr/include/grpc/impl/codegen/sync.h:
@@ -1279,6 +1312,8 @@ proto/pobox.pb.h:
 /usr/include/grpc/support/log.h:
 
 /usr/include/grpc/support/port_platform.h:
+
+/usr/include/c++/13/codecvt:
 
 /usr/include/grpc/support/workaround_list.h:
 
@@ -1424,8 +1459,6 @@ proto/pobox.pb.h:
 
 /usr/include/grpcpp/support/interceptor.h:
 
-/usr/include/x86_64-linux-gnu/c++/13/bits/time_members.h:
-
 /usr/include/grpcpp/support/method_handler.h:
 
 /usr/include/grpcpp/support/proto_buffer_reader.h:
@@ -1460,9 +1493,9 @@ proto/pobox.pb.h:
 
 /usr/include/linux/version.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
 /usr/include/c++/13/cstdio:
+
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
 /usr/include/math.h:
 
@@ -1478,9 +1511,9 @@ proto/pobox.pb.h:
 
 /usr/include/string.h:
 
-/usr/include/c++/13/bits/atomic_lockfree_defines.h:
-
 /usr/include/c++/13/bits/stl_heap.h:
+
+/usr/include/c++/13/bits/atomic_lockfree_defines.h:
 
 /usr/include/google/protobuf/wire_format_lite.h:
 
@@ -1584,6 +1617,12 @@ proto/pobox.pb.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
 
+/usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
+
 /usr/include/grpcpp/support/channel_arguments.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
@@ -1631,15 +1670,3 @@ proto/pobox.pb.h:
 /usr/include/x86_64-linux-gnu/sys/select.h:
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/messages_members.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
-
-/usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h:
-
-/usr/include/c++/13/bits/erase_if.h:
-
-/usr/include/x86_64-linux-gnu/gnu/stubs.h:
-
-/usr/include/x86_64-linux-gnu/sys/cdefs.h:

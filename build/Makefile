@@ -130,6 +130,19 @@ pobox_proto/fast:
 .PHONY : pobox_proto/fast
 
 #=============================================================================
+# Target rules for targets named pobox_engine
+
+# Build rule for target.
+pobox_engine: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pobox_engine
+.PHONY : pobox_engine
+
+# fast build rule for target.
+pobox_engine/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/build
+.PHONY : pobox_engine/fast
+
+#=============================================================================
 # Target rules for targets named pobox_server
 
 # Build rule for target.
@@ -227,6 +240,54 @@ src/client/main.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_client.dir/build.make CMakeFiles/pobox_client.dir/src/client/main.cc.s
 .PHONY : src/client/main.cc.s
 
+src/engine/dictionary.o: src/engine/dictionary.cc.o
+.PHONY : src/engine/dictionary.o
+
+# target to build an object file
+src/engine/dictionary.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o
+.PHONY : src/engine/dictionary.cc.o
+
+src/engine/dictionary.i: src/engine/dictionary.cc.i
+.PHONY : src/engine/dictionary.i
+
+# target to preprocess a source file
+src/engine/dictionary.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.i
+.PHONY : src/engine/dictionary.cc.i
+
+src/engine/dictionary.s: src/engine/dictionary.cc.s
+.PHONY : src/engine/dictionary.s
+
+# target to generate assembly for a file
+src/engine/dictionary.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.s
+.PHONY : src/engine/dictionary.cc.s
+
+src/engine/scorer.o: src/engine/scorer.cc.o
+.PHONY : src/engine/scorer.o
+
+# target to build an object file
+src/engine/scorer.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o
+.PHONY : src/engine/scorer.cc.o
+
+src/engine/scorer.i: src/engine/scorer.cc.i
+.PHONY : src/engine/scorer.i
+
+# target to preprocess a source file
+src/engine/scorer.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.i
+.PHONY : src/engine/scorer.cc.i
+
+src/engine/scorer.s: src/engine/scorer.cc.s
+.PHONY : src/engine/scorer.s
+
+# target to generate assembly for a file
+src/engine/scorer.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.s
+.PHONY : src/engine/scorer.cc.s
+
 src/server/main.o: src/server/main.cc.o
 .PHONY : src/server/main.o
 
@@ -260,6 +321,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... pobox_client"
+	@echo "... pobox_engine"
 	@echo "... pobox_proto"
 	@echo "... pobox_server"
 	@echo "... proto/pobox.grpc.pb.o"
@@ -271,6 +333,12 @@ help:
 	@echo "... src/client/main.o"
 	@echo "... src/client/main.i"
 	@echo "... src/client/main.s"
+	@echo "... src/engine/dictionary.o"
+	@echo "... src/engine/dictionary.i"
+	@echo "... src/engine/dictionary.s"
+	@echo "... src/engine/scorer.o"
+	@echo "... src/engine/scorer.i"
+	@echo "... src/engine/scorer.s"
 	@echo "... src/server/main.o"
 	@echo "... src/server/main.i"
 	@echo "... src/server/main.s"

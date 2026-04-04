@@ -92,6 +92,7 @@ pobox_server_EXTERNAL_OBJECTS =
 
 pobox_server: CMakeFiles/pobox_server.dir/src/server/main.cc.o
 pobox_server: CMakeFiles/pobox_server.dir/build.make
+pobox_server: libpobox_engine.a
 pobox_server: libpobox_proto.a
 pobox_server: /usr/lib/x86_64-linux-gnu/libgrpc++.so.1.51.1
 pobox_server: /usr/lib/x86_64-linux-gnu/libprotobuf.so

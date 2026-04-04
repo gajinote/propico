@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/seigen/workspace/pobox-neo/build/proto -isystem /home/seigen/miniconda3/include
+CXX_INCLUDES = -I/home/seigen/workspace/pobox-neo/src/engine -I/home/seigen/workspace/pobox-neo/build/proto -isystem /home/seigen/miniconda3/include
 
 CXX_FLAGS = -g -std=c++20 -pthread
 

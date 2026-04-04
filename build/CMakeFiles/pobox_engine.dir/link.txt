@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpobox_engine.a CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o
+/usr/bin/ranlib libpobox_engine.a

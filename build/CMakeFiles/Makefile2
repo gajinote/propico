@@ -64,6 +64,7 @@ CMAKE_BINARY_DIR = /home/seigen/workspace/pobox-neo/build
 
 # The main recursive "all" target.
 all: CMakeFiles/pobox_proto.dir/all
+all: CMakeFiles/pobox_engine.dir/all
 all: CMakeFiles/pobox_server.dir/all
 all: CMakeFiles/pobox_client.dir/all
 .PHONY : all
@@ -74,6 +75,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/pobox_proto.dir/clean
+clean: CMakeFiles/pobox_engine.dir/clean
 clean: CMakeFiles/pobox_server.dir/clean
 clean: CMakeFiles/pobox_client.dir/clean
 .PHONY : clean
@@ -85,7 +87,7 @@ clean: CMakeFiles/pobox_client.dir/clean
 CMakeFiles/pobox_proto.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_proto.dir/build.make CMakeFiles/pobox_proto.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_proto.dir/build.make CMakeFiles/pobox_proto.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=3,4,5,6 "Built target pobox_proto"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=6,7,8,9 "Built target pobox_proto"
 .PHONY : CMakeFiles/pobox_proto.dir/all
 
 # Build rule for subdir invocation for target.
@@ -105,18 +107,45 @@ CMakeFiles/pobox_proto.dir/clean:
 .PHONY : CMakeFiles/pobox_proto.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/pobox_engine.dir
+
+# All Build rule for target.
+CMakeFiles/pobox_engine.dir/all: CMakeFiles/pobox_proto.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=3,4,5 "Built target pobox_engine"
+.PHONY : CMakeFiles/pobox_engine.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/pobox_engine.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 7
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pobox_engine.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 0
+.PHONY : CMakeFiles/pobox_engine.dir/rule
+
+# Convenience name for target.
+pobox_engine: CMakeFiles/pobox_engine.dir/rule
+.PHONY : pobox_engine
+
+# clean rule for target.
+CMakeFiles/pobox_engine.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/clean
+.PHONY : CMakeFiles/pobox_engine.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/pobox_server.dir
 
 # All Build rule for target.
 CMakeFiles/pobox_server.dir/all: CMakeFiles/pobox_proto.dir/all
+CMakeFiles/pobox_server.dir/all: CMakeFiles/pobox_engine.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_server.dir/build.make CMakeFiles/pobox_server.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_server.dir/build.make CMakeFiles/pobox_server.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=7,8 "Built target pobox_server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=10,11 "Built target pobox_server"
 .PHONY : CMakeFiles/pobox_server.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/pobox_server.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 9
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pobox_server.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 0
 .PHONY : CMakeFiles/pobox_server.dir/rule

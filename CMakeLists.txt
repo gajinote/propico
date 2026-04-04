@@ -73,6 +73,16 @@ target_link_libraries(pobox_proto
 )
 
 # -----------------------------------------------------------------------
+# 予測エンジン
+# -----------------------------------------------------------------------
+add_library(pobox_engine STATIC
+    src/engine/dictionary.cc
+    src/engine/scorer.cc
+)
+target_include_directories(pobox_engine PUBLIC src/engine)
+target_link_libraries(pobox_engine PUBLIC pobox_proto)
+
+# -----------------------------------------------------------------------
 # サーバー
 # -----------------------------------------------------------------------
 add_executable(pobox_server
@@ -80,7 +90,7 @@ add_executable(pobox_server
 )
 target_link_libraries(pobox_server
     PRIVATE
-        pobox_proto
+        pobox_engine
         Threads::Threads
 )
 
