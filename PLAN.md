@@ -10,18 +10,21 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ---
 
-## 現状 (2026-04-03)
+## 現状 (2026-04-06)
 
 | 成果物 | 状態 |
 |---|---|
 | `pobox.proto` | ✅ 完了（Search / Learn / Sync RPC 定義） |
-| `CMakeLists.txt` | ✅ 完了（proto 生成 + server/client/test ターゲット） |
-| `src/server/main.cc` | ✅ スケルトン完了（ログ出力のみ） |
-| `src/client/main.cc` | ✅ スケルトン完了（Search RPC 呼び出し） |
-| ビルド | ✅ 成功（`build/pobox_server`, `build/pobox_client` 生成済み） |
-| 予測エンジン | ❌ 未実装 |
-| 学習機能 | ❌ 未実装 |
-| テスト (CPPUnit) | ❌ 未実装 |
+| `CMakeLists.txt` | ✅ 完了（proto 生成 + server / client / test ターゲット） |
+| `src/server/main.cc` | ✅ 完了（Dictionary + Scorer に接続、Learn はインメモリ暫定） |
+| `src/client/main.cc` | ✅ 完了（Search RPC 呼び出し・候補表示） |
+| `src/engine/candidate.h` | ✅ 完了（内部 Candidate 型、`pobox::engine` 名前空間） |
+| `src/engine/dictionary.h/.cc` | ✅ 完了（TSV 読み込み・前方一致検索） |
+| `src/engine/scorer.h/.cc` | ✅ 完了（boost 計算・final_score 降順ソート） |
+| `dict/default.tsv` | ✅ 完了（日本語サンプル辞書 約190語） |
+| テスト (CPPUnit) | ✅ 完了（Dictionary 9件 + Scorer 7件、全16件 OK） |
+| 学習機能（SQLite 永続化） | ❌ 未実装（現状はインメモリのみ） |
+| 同期機能 | ❌ 未実装（将来） |
 
 ---
 
@@ -35,44 +38,43 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ---
 
-### Phase 2 — 辞書 + 予測エンジン
+### Phase 2 — 辞書 + 予測エンジン（完了）
 
-**目標:** Search RPC が実際に候補を返せるようにする。
+- [x] `src/engine/candidate.h` — 内部 Candidate 型（`pobox::engine` 名前空間）
+- [x] `src/engine/dictionary.h/.cc` — TSV 辞書の読み込み・前方一致検索
+- [x] `src/engine/scorer.h/.cc` — `log(1+count) × decay_factor` による boost 計算
+- [x] `src/server/main.cc` — Search RPC に辞書検索を接続
+- [x] `dict/default.tsv` — 日本語サンプル辞書（約190語）
 
-POBox 原典の「辞書前方一致予測」を実装する。品詞解析は行わない。
-
-#### 2-1. 辞書データ構造
-
-```
-src/engine/
-├── dictionary.h / .cc   ← TSV 辞書の読み込み・前方一致検索
-├── candidate.h          ← Candidate 内部表現（id / text / reading / base_score）
-└── scorer.h / .cc       ← 辞書スコア + 学習 boost の統合
-```
-
-- 辞書形式: `読み\t表記\t基本スコア`（TSV）
-- 検索: UTF-8 文字列前方一致（将来的に曖昧一致へ拡張）
-- 基本スコアは出現頻度ベース（0.0〜1.0）
-
-#### 2-2. Search RPC への組み込み
-
-- `PoBoxServiceImpl::Search` に辞書検索を接続
-- 結果をスコア降順にソートして `SearchResponse` に詰める
-- `max_candidates` で件数上限を適用する
-
-#### 完了条件
-
+**動作確認済み:**
 ```bash
 ./build/pobox_client "あい"
-# → 愛  [あい]  score=0.95
-#    間  [あい]  score=0.80
+# → 愛 [あい] score=0.95 / 挨拶 [あいさつ] score=0.90 / ...
 ```
+
+**備考:** Learn RPC は現在インメモリ（`unordered_map`）で boost を保持している。
+サーバー再起動で学習データは消える。Phase 3 で SQLite に置き換える。
 
 ---
 
-### Phase 3 — 学習機能（動的ランキング）
+### Phase 4 — テスト (CPPUnit)（完了）
 
-**目標:** Learn RPC で選択履歴を永続化し、使うほど賢くなる動的ランキングを実現する。
+- [x] `tests/test_runner.cc` — CppUnit エントリポイント
+- [x] `tests/test_dictionary.cc` — 前方一致・空辞書・不正行・例外など 9件
+- [x] `tests/test_scorer.cc` — boost 計算・apply・ソート順など 7件
+
+```bash
+ctest --test-dir build
+# → 100% tests passed, 0 tests failed out of 1
+```
+
+Phase 3 実装後に `tests/test_learn.cc` を追加する。
+
+---
+
+### Phase 3 — 学習機能（動的ランキング）← **次のステップ**
+
+**目標:** Learn RPC で選択履歴を SQLite に永続化し、サーバー再起動後も学習が引き継がれるようにする。
 
 POBox 原典の「使用頻度による動的ランキング」と「複合語の文脈学習」に対応する。
 
@@ -104,7 +106,14 @@ CREATE TABLE compound_log (
 );
 ```
 
-#### 3-2. スコア計算式
+#### 3-2. 実装ファイル
+
+```
+src/engine/
+└── history.h / .cc   ← SQLite ラッパー（learn_log / score_override の読み書き）
+```
+
+#### 3-3. スコア計算式
 
 ```
 final_score = base_score + boost
@@ -113,11 +122,12 @@ boost       = log(1 + selection_count) × decay_factor
 
 `decay_factor` は設定可能（デフォルト 0.1）。
 
-#### 3-3. Learn RPC への組み込み
+#### 3-4. Learn RPC への組み込み
 
 - `LearnRequest` を受けて `learn_log` に記録
-- `score_override.boost` を更新
-- 次回 `Search` 時に `scorer` が boost を基本スコアに加算
+- `score_override` の boost を更新
+- Search 時に `history` から boost_map を取得し `scorer_.apply()` に渡す
+- サーバーの `unordered_map<boost_map>` を SQLite ベースに置き換える
 
 #### 追加依存パッケージ
 
@@ -125,25 +135,17 @@ boost       = log(1 + selection_count) × decay_factor
 sudo apt install -y libsqlite3-dev
 ```
 
----
-
-### Phase 4 — テスト (CPPUnit)
-
-**目標:** エンジンの主要ロジックを自動テストで保護する。
-
-```
-tests/
-├── test_runner.cc        ← main + CppUnit::TextUi::TestRunner
-├── test_dictionary.cc    ← TSV 辞書読み込み・前方一致検索
-├── test_scorer.cc        ← スコア計算式の単体テスト
-└── test_learn.cc         ← 学習ログ記録・boost 更新
-```
+#### 完了条件
 
 ```bash
-cmake --build build && ctest --test-dir build
-```
+# 1回目: サーバー起動・候補選択
+./build/pobox_client "あい"   # → 愛 score=0.95
+# Learn で "愛" を学習
 
-CPPUnit が未インストールの環境ではテストターゲットをスキップ（CMake 設定で対応済み）。
+# 2回目: サーバー再起動後も "愛" のスコアが上昇している
+./build/pobox_server dict/default.tsv  # 再起動
+./build/pobox_client "あい"   # → 愛 score > 0.95
+```
 
 ---
 
@@ -162,9 +164,8 @@ POBox 原典の「別端末で学習した内容を同期」に対応する。
 ## 優先順位と依存関係
 
 ```
-Phase 1 ✅ → Phase 2 → Phase 4（並行可）→ Phase 3 → Phase 5
+Phase 1 ✅ → Phase 2 ✅ → Phase 4 ✅ → Phase 3（次） → Phase 5
 ```
 
-- Phase 2 と Phase 4 の骨格は並行して進められる
-- Phase 3（SQLite）は Phase 2 の辞書検索完了後に着手する
+- Phase 3 完了後、`tests/test_learn.cc` を追加して Phase 4 を拡充する
 - Phase 5 は Phase 3 が安定してから着手する
