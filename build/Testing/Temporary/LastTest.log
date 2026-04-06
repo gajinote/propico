@@ -1,0 +1,35 @@
+Start testing: Apr 06 17:47 JST
+----------------------------------------------------------
+1/1 Testing: pobox_tests
+1/1 Test: pobox_tests
+Command: "/home/seigen/workspace/pobox-neo/build/pobox_tests"
+Directory: /home/seigen/workspace/pobox-neo/build
+"pobox_tests" start time: Apr 06 17:47 JST
+Output:
+----------------------------------------------------------
+DictionaryTest::test_load_and_size : OK
+DictionaryTest::test_prefix_match_exact : OK
+DictionaryTest::test_prefix_match_partial : OK
+DictionaryTest::test_no_match : OK
+DictionaryTest::test_empty_prefix_returns_empty : OK
+DictionaryTest::test_score_descending_order : OK
+DictionaryTest::test_max_results_limit : OK
+DictionaryTest::test_skip_comment_and_blank_lines : OK
+DictionaryTest::test_load_nonexistent_throws : OK
+ScorerTest::test_boost_zero_count : OK
+ScorerTest::test_boost_positive_count : OK
+ScorerTest::test_boost_formula : OK
+ScorerTest::test_apply_no_boost : OK
+ScorerTest::test_apply_with_boost : OK
+ScorerTest::test_apply_sorted_descending : OK
+ScorerTest::test_apply_unknown_id_ignored : OK
+OK (16)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"pobox_tests" end time: Apr 06 17:47 JST
+"pobox_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 06 17:47 JST

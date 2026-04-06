@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /home/seigen/workspace/pobox-neo/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
@@ -167,6 +177,19 @@ pobox_client: cmake_check_build_system
 pobox_client/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_client.dir/build.make CMakeFiles/pobox_client.dir/build
 .PHONY : pobox_client/fast
+
+#=============================================================================
+# Target rules for targets named pobox_tests
+
+# Build rule for target.
+pobox_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pobox_tests
+.PHONY : pobox_tests
+
+# fast build rule for target.
+pobox_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/build
+.PHONY : pobox_tests/fast
 
 proto/pobox.grpc.pb.o: proto/pobox.grpc.pb.cc.o
 .PHONY : proto/pobox.grpc.pb.o
@@ -312,6 +335,78 @@ src/server/main.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_server.dir/build.make CMakeFiles/pobox_server.dir/src/server/main.cc.s
 .PHONY : src/server/main.cc.s
 
+tests/test_dictionary.o: tests/test_dictionary.cc.o
+.PHONY : tests/test_dictionary.o
+
+# target to build an object file
+tests/test_dictionary.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o
+.PHONY : tests/test_dictionary.cc.o
+
+tests/test_dictionary.i: tests/test_dictionary.cc.i
+.PHONY : tests/test_dictionary.i
+
+# target to preprocess a source file
+tests/test_dictionary.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.i
+.PHONY : tests/test_dictionary.cc.i
+
+tests/test_dictionary.s: tests/test_dictionary.cc.s
+.PHONY : tests/test_dictionary.s
+
+# target to generate assembly for a file
+tests/test_dictionary.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.s
+.PHONY : tests/test_dictionary.cc.s
+
+tests/test_runner.o: tests/test_runner.cc.o
+.PHONY : tests/test_runner.o
+
+# target to build an object file
+tests/test_runner.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o
+.PHONY : tests/test_runner.cc.o
+
+tests/test_runner.i: tests/test_runner.cc.i
+.PHONY : tests/test_runner.i
+
+# target to preprocess a source file
+tests/test_runner.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_runner.cc.i
+.PHONY : tests/test_runner.cc.i
+
+tests/test_runner.s: tests/test_runner.cc.s
+.PHONY : tests/test_runner.s
+
+# target to generate assembly for a file
+tests/test_runner.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_runner.cc.s
+.PHONY : tests/test_runner.cc.s
+
+tests/test_scorer.o: tests/test_scorer.cc.o
+.PHONY : tests/test_scorer.o
+
+# target to build an object file
+tests/test_scorer.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o
+.PHONY : tests/test_scorer.cc.o
+
+tests/test_scorer.i: tests/test_scorer.cc.i
+.PHONY : tests/test_scorer.i
+
+# target to preprocess a source file
+tests/test_scorer.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.i
+.PHONY : tests/test_scorer.cc.i
+
+tests/test_scorer.s: tests/test_scorer.cc.s
+.PHONY : tests/test_scorer.s
+
+# target to generate assembly for a file
+tests/test_scorer.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.s
+.PHONY : tests/test_scorer.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -320,10 +415,12 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... pobox_client"
 	@echo "... pobox_engine"
 	@echo "... pobox_proto"
 	@echo "... pobox_server"
+	@echo "... pobox_tests"
 	@echo "... proto/pobox.grpc.pb.o"
 	@echo "... proto/pobox.grpc.pb.i"
 	@echo "... proto/pobox.grpc.pb.s"
@@ -342,6 +439,15 @@ help:
 	@echo "... src/server/main.o"
 	@echo "... src/server/main.i"
 	@echo "... src/server/main.s"
+	@echo "... tests/test_dictionary.o"
+	@echo "... tests/test_dictionary.i"
+	@echo "... tests/test_dictionary.s"
+	@echo "... tests/test_runner.o"
+	@echo "... tests/test_runner.i"
+	@echo "... tests/test_runner.s"
+	@echo "... tests/test_scorer.o"
+	@echo "... tests/test_scorer.i"
+	@echo "... tests/test_scorer.s"
 .PHONY : help
 
 

@@ -71,4 +71,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/pobox_engine.dir/DependInfo.cmake"
   "CMakeFiles/pobox_server.dir/DependInfo.cmake"
   "CMakeFiles/pobox_client.dir/DependInfo.cmake"
+  "CMakeFiles/pobox_tests.dir/DependInfo.cmake"
   )

@@ -119,7 +119,7 @@ if(CppUnit_FOUND OR TARGET CppUnit::CppUnit)
         add_executable(pobox_tests ${TEST_SRCS})
         target_link_libraries(pobox_tests
             PRIVATE
-                pobox_proto
+                pobox_engine
                 CppUnit::CppUnit
                 Threads::Threads
         )
@@ -141,7 +141,7 @@ else()
             target_include_directories(pobox_tests PRIVATE ${CPPUNIT_INCLUDE_DIRS})
             target_link_libraries(pobox_tests
                 PRIVATE
-                    pobox_proto
+                    pobox_engine
                     ${CPPUNIT_LIBRARIES}
                     Threads::Threads
             )

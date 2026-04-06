@@ -67,6 +67,7 @@ all: CMakeFiles/pobox_proto.dir/all
 all: CMakeFiles/pobox_engine.dir/all
 all: CMakeFiles/pobox_server.dir/all
 all: CMakeFiles/pobox_client.dir/all
+all: CMakeFiles/pobox_tests.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -78,6 +79,7 @@ clean: CMakeFiles/pobox_proto.dir/clean
 clean: CMakeFiles/pobox_engine.dir/clean
 clean: CMakeFiles/pobox_server.dir/clean
 clean: CMakeFiles/pobox_client.dir/clean
+clean: CMakeFiles/pobox_tests.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -184,6 +186,33 @@ pobox_client: CMakeFiles/pobox_client.dir/rule
 CMakeFiles/pobox_client.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_client.dir/build.make CMakeFiles/pobox_client.dir/clean
 .PHONY : CMakeFiles/pobox_client.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/pobox_tests.dir
+
+# All Build rule for target.
+CMakeFiles/pobox_tests.dir/all: CMakeFiles/pobox_proto.dir/all
+CMakeFiles/pobox_tests.dir/all: CMakeFiles/pobox_engine.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=12,13,14,15 "Built target pobox_tests"
+.PHONY : CMakeFiles/pobox_tests.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/pobox_tests.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 11
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pobox_tests.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/seigen/workspace/pobox-neo/build/CMakeFiles 0
+.PHONY : CMakeFiles/pobox_tests.dir/rule
+
+# Convenience name for target.
+pobox_tests: CMakeFiles/pobox_tests.dir/rule
+.PHONY : pobox_tests
+
+# clean rule for target.
+CMakeFiles/pobox_tests.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/clean
+.PHONY : CMakeFiles/pobox_tests.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
