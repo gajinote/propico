@@ -14,6 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(gRPC REQUIRED)   # grpc++ を含む
+find_package(SQLite3 REQUIRED)
 
 # -----------------------------------------------------------------------
 # Protocol Buffers / gRPC コード生成
@@ -78,9 +79,10 @@ target_link_libraries(pobox_proto
 add_library(pobox_engine STATIC
     src/engine/dictionary.cc
     src/engine/scorer.cc
+    src/engine/history.cc
 )
 target_include_directories(pobox_engine PUBLIC src/engine)
-target_link_libraries(pobox_engine PUBLIC pobox_proto)
+target_link_libraries(pobox_engine PUBLIC pobox_proto SQLite::SQLite3)
 
 # -----------------------------------------------------------------------
 # サーバー

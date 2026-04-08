@@ -1,20 +1,20 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <unordered_map>
 
 #include <grpcpp/grpcpp.h>
 #include "pobox.grpc.pb.h"
 
 #include "dictionary.h"
+#include "history.h"
 #include "scorer.h"
 
 static constexpr std::size_t kDefaultMaxCandidates = 10;
 
 class PoBoxServiceImpl final : public pobox::PoBox::Service {
 public:
-    explicit PoBoxServiceImpl(pobox::engine::Dictionary dict)
-        : dict_(std::move(dict)), scorer_() {}
+    explicit PoBoxServiceImpl(pobox::engine::Dictionary dict, const std::string& db_path)
+        : dict_(std::move(dict)), scorer_(), history_(db_path) {}
 
     grpc::Status Search(grpc::ServerContext* /*context*/,
                         const pobox::SearchRequest* request,
@@ -27,7 +27,7 @@ public:
                                       : kDefaultMaxCandidates;
 
         auto candidates = dict_.search(prefix, limit * 2);
-        candidates      = scorer_.apply(std::move(candidates), boost_map_);
+        candidates      = scorer_.apply(std::move(candidates), history_.load_boost_map());
 
         // 件数を limit に絞る
         if (candidates.size() > limit) candidates.resize(limit);
@@ -45,9 +45,10 @@ public:
     grpc::Status Learn(grpc::ServerContext* /*context*/,
                        const pobox::LearnRequest* request,
                        pobox::LearnResponse* response) override {
-        const auto& id = request->candidate_id();
+        const auto& id     = request->candidate_id();
+        const auto& prefix = request->prefix();
         std::cout << "A learn request for candidate_id='" << id << "' was received\n";
-        ++boost_map_[id];
+        history_.record(id, prefix);
         response->set_success(true);
         return grpc::Status::OK;
     }
@@ -62,12 +63,12 @@ public:
 private:
     pobox::engine::Dictionary dict_;
     pobox::engine::Scorer     scorer_;
-    // Phase 3 で SQLite に置き換えるまでのインメモリ boost カウンタ
-    std::unordered_map<std::string, int> boost_map_;
+    pobox::engine::History    history_;
 };
 
 int main(int argc, char* argv[]) {
     const std::string dict_path = (argc >= 2) ? argv[1] : "dict/default.tsv";
+    const std::string db_path   = (argc >= 3) ? argv[2] : "pobox_history.db";
     const std::string address   = "0.0.0.0:50051";
 
     pobox::engine::Dictionary dict;
@@ -79,7 +80,8 @@ int main(int argc, char* argv[]) {
         std::cerr << "[warn] " << e.what() << " — starting with empty dictionary\n";
     }
 
-    PoBoxServiceImpl service(std::move(dict));
+    PoBoxServiceImpl service(std::move(dict), db_path);
+    std::cout << "History database: " << db_path << "\n";
     grpc::ServerBuilder builder;
     builder.AddListeningPort(address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);
