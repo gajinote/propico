@@ -83,10 +83,24 @@ CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seigen/workspace/pobox-neo/tests/test_dictionary.cc -o CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.s
 
+CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o: CMakeFiles/pobox_tests.dir/flags.make
+CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o: /home/seigen/workspace/pobox-neo/tests/test_learn.cc
+CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o: CMakeFiles/pobox_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o -MF CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o.d -o CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o -c /home/seigen/workspace/pobox-neo/tests/test_learn.cc
+
+CMakeFiles/pobox_tests.dir/tests/test_learn.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/pobox_tests.dir/tests/test_learn.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/seigen/workspace/pobox-neo/tests/test_learn.cc > CMakeFiles/pobox_tests.dir/tests/test_learn.cc.i
+
+CMakeFiles/pobox_tests.dir/tests/test_learn.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/pobox_tests.dir/tests/test_learn.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seigen/workspace/pobox-neo/tests/test_learn.cc -o CMakeFiles/pobox_tests.dir/tests/test_learn.cc.s
+
 CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o: CMakeFiles/pobox_tests.dir/flags.make
 CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o: /home/seigen/workspace/pobox-neo/tests/test_runner.cc
 CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o: CMakeFiles/pobox_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o -MF CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o.d -o CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o -c /home/seigen/workspace/pobox-neo/tests/test_runner.cc
 
 CMakeFiles/pobox_tests.dir/tests/test_runner.cc.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/pobox_tests.dir/tests/test_runner.cc.s: cmake_force
 CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o: CMakeFiles/pobox_tests.dir/flags.make
 CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o: /home/seigen/workspace/pobox-neo/tests/test_scorer.cc
 CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o: CMakeFiles/pobox_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o -MF CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o.d -o CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o -c /home/seigen/workspace/pobox-neo/tests/test_scorer.cc
 
 CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.i: cmake_force
@@ -114,6 +128,7 @@ CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.s: cmake_force
 # Object files for target pobox_tests
 pobox_tests_OBJECTS = \
 "CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o" \
+"CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o" \
 "CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o" \
 "CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o"
 
@@ -121,6 +136,7 @@ pobox_tests_OBJECTS = \
 pobox_tests_EXTERNAL_OBJECTS =
 
 pobox_tests: CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o
+pobox_tests: CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o
 pobox_tests: CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o
 pobox_tests: CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o
 pobox_tests: CMakeFiles/pobox_tests.dir/build.make
@@ -181,8 +197,9 @@ pobox_tests: /usr/lib/x86_64-linux-gnu/libabsl_civil_time.so.20220623.0.0
 pobox_tests: /usr/lib/x86_64-linux-gnu/libabsl_time_zone.so.20220623.0.0
 pobox_tests: /usr/lib/x86_64-linux-gnu/libssl.so
 pobox_tests: /usr/lib/x86_64-linux-gnu/libcrypto.so
+pobox_tests: /usr/lib/x86_64-linux-gnu/libsqlite3.so
 pobox_tests: CMakeFiles/pobox_tests.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable pobox_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable pobox_tests"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pobox_tests.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

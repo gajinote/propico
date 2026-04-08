@@ -287,6 +287,30 @@ src/engine/dictionary.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.s
 .PHONY : src/engine/dictionary.cc.s
 
+src/engine/history.o: src/engine/history.cc.o
+.PHONY : src/engine/history.o
+
+# target to build an object file
+src/engine/history.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/history.cc.o
+.PHONY : src/engine/history.cc.o
+
+src/engine/history.i: src/engine/history.cc.i
+.PHONY : src/engine/history.i
+
+# target to preprocess a source file
+src/engine/history.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/history.cc.i
+.PHONY : src/engine/history.cc.i
+
+src/engine/history.s: src/engine/history.cc.s
+.PHONY : src/engine/history.s
+
+# target to generate assembly for a file
+src/engine/history.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_engine.dir/build.make CMakeFiles/pobox_engine.dir/src/engine/history.cc.s
+.PHONY : src/engine/history.cc.s
+
 src/engine/scorer.o: src/engine/scorer.cc.o
 .PHONY : src/engine/scorer.o
 
@@ -358,6 +382,30 @@ tests/test_dictionary.s: tests/test_dictionary.cc.s
 tests/test_dictionary.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.s
 .PHONY : tests/test_dictionary.cc.s
+
+tests/test_learn.o: tests/test_learn.cc.o
+.PHONY : tests/test_learn.o
+
+# target to build an object file
+tests/test_learn.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o
+.PHONY : tests/test_learn.cc.o
+
+tests/test_learn.i: tests/test_learn.cc.i
+.PHONY : tests/test_learn.i
+
+# target to preprocess a source file
+tests/test_learn.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_learn.cc.i
+.PHONY : tests/test_learn.cc.i
+
+tests/test_learn.s: tests/test_learn.cc.s
+.PHONY : tests/test_learn.s
+
+# target to generate assembly for a file
+tests/test_learn.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pobox_tests.dir/build.make CMakeFiles/pobox_tests.dir/tests/test_learn.cc.s
+.PHONY : tests/test_learn.cc.s
 
 tests/test_runner.o: tests/test_runner.cc.o
 .PHONY : tests/test_runner.o
@@ -433,6 +481,9 @@ help:
 	@echo "... src/engine/dictionary.o"
 	@echo "... src/engine/dictionary.i"
 	@echo "... src/engine/dictionary.s"
+	@echo "... src/engine/history.o"
+	@echo "... src/engine/history.i"
+	@echo "... src/engine/history.s"
 	@echo "... src/engine/scorer.o"
 	@echo "... src/engine/scorer.i"
 	@echo "... src/engine/scorer.s"
@@ -442,6 +493,9 @@ help:
 	@echo "... tests/test_dictionary.o"
 	@echo "... tests/test_dictionary.i"
 	@echo "... tests/test_dictionary.s"
+	@echo "... tests/test_learn.o"
+	@echo "... tests/test_learn.i"
+	@echo "... tests/test_learn.s"
 	@echo "... tests/test_runner.o"
 	@echo "... tests/test_runner.i"
 	@echo "... tests/test_runner.s"

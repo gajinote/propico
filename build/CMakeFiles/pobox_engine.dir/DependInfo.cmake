@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/seigen/workspace/pobox-neo/src/engine/dictionary.cc" "CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o" "gcc" "CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o.d"
+  "/home/seigen/workspace/pobox-neo/src/engine/history.cc" "CMakeFiles/pobox_engine.dir/src/engine/history.cc.o" "gcc" "CMakeFiles/pobox_engine.dir/src/engine/history.cc.o.d"
   "/home/seigen/workspace/pobox-neo/src/engine/scorer.cc" "CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o" "gcc" "CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o.d"
   )
 

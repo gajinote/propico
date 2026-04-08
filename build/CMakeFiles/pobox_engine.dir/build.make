@@ -97,19 +97,35 @@ CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seigen/workspace/pobox-neo/src/engine/scorer.cc -o CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.s
 
+CMakeFiles/pobox_engine.dir/src/engine/history.cc.o: CMakeFiles/pobox_engine.dir/flags.make
+CMakeFiles/pobox_engine.dir/src/engine/history.cc.o: /home/seigen/workspace/pobox-neo/src/engine/history.cc
+CMakeFiles/pobox_engine.dir/src/engine/history.cc.o: CMakeFiles/pobox_engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/pobox_engine.dir/src/engine/history.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/pobox_engine.dir/src/engine/history.cc.o -MF CMakeFiles/pobox_engine.dir/src/engine/history.cc.o.d -o CMakeFiles/pobox_engine.dir/src/engine/history.cc.o -c /home/seigen/workspace/pobox-neo/src/engine/history.cc
+
+CMakeFiles/pobox_engine.dir/src/engine/history.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/pobox_engine.dir/src/engine/history.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/seigen/workspace/pobox-neo/src/engine/history.cc > CMakeFiles/pobox_engine.dir/src/engine/history.cc.i
+
+CMakeFiles/pobox_engine.dir/src/engine/history.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/pobox_engine.dir/src/engine/history.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seigen/workspace/pobox-neo/src/engine/history.cc -o CMakeFiles/pobox_engine.dir/src/engine/history.cc.s
+
 # Object files for target pobox_engine
 pobox_engine_OBJECTS = \
 "CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o" \
-"CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o"
+"CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o" \
+"CMakeFiles/pobox_engine.dir/src/engine/history.cc.o"
 
 # External object files for target pobox_engine
 pobox_engine_EXTERNAL_OBJECTS =
 
 libpobox_engine.a: CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o
 libpobox_engine.a: CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o
+libpobox_engine.a: CMakeFiles/pobox_engine.dir/src/engine/history.cc.o
 libpobox_engine.a: CMakeFiles/pobox_engine.dir/build.make
 libpobox_engine.a: CMakeFiles/pobox_engine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libpobox_engine.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libpobox_engine.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/pobox_engine.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pobox_engine.dir/link.txt --verbose=$(VERBOSE)
 

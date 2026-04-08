@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o"
   "CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o.d"
+  "CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o"
+  "CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o.d"
   "CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o"
   "CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o.d"
   "CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o"

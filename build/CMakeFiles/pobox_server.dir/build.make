@@ -149,6 +149,7 @@ pobox_server: /usr/lib/x86_64-linux-gnu/libabsl_civil_time.so.20220623.0.0
 pobox_server: /usr/lib/x86_64-linux-gnu/libabsl_time_zone.so.20220623.0.0
 pobox_server: /usr/lib/x86_64-linux-gnu/libssl.so
 pobox_server: /usr/lib/x86_64-linux-gnu/libcrypto.so
+pobox_server: /usr/lib/x86_64-linux-gnu/libsqlite3.so
 pobox_server: CMakeFiles/pobox_server.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/seigen/workspace/pobox-neo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable pobox_server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pobox_server.dir/link.txt --verbose=$(VERBOSE)

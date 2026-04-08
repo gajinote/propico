@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/seigen/workspace/pobox-neo/tests/test_dictionary.cc" "CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o" "gcc" "CMakeFiles/pobox_tests.dir/tests/test_dictionary.cc.o.d"
+  "/home/seigen/workspace/pobox-neo/tests/test_learn.cc" "CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o" "gcc" "CMakeFiles/pobox_tests.dir/tests/test_learn.cc.o.d"
   "/home/seigen/workspace/pobox-neo/tests/test_runner.cc" "CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o" "gcc" "CMakeFiles/pobox_tests.dir/tests/test_runner.cc.o.d"
   "/home/seigen/workspace/pobox-neo/tests/test_scorer.cc" "CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o" "gcc" "CMakeFiles/pobox_tests.dir/tests/test_scorer.cc.o.d"
   )

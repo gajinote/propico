@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o"
   "CMakeFiles/pobox_engine.dir/src/engine/dictionary.cc.o.d"
+  "CMakeFiles/pobox_engine.dir/src/engine/history.cc.o"
+  "CMakeFiles/pobox_engine.dir/src/engine/history.cc.o.d"
   "CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o"
   "CMakeFiles/pobox_engine.dir/src/engine/scorer.cc.o.d"
   "libpobox_engine.a"
