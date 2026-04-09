@@ -7,6 +7,7 @@ CMakeFiles/pobox_server.dir/src/server/main.cc.o
  /home/seigen/workspace/pobox-neo/build/proto/pobox.pb.h
  /home/seigen/workspace/pobox-neo/src/engine/candidate.h
  /home/seigen/workspace/pobox-neo/src/engine/dictionary.h
+ /home/seigen/workspace/pobox-neo/src/engine/history.h
  /home/seigen/workspace/pobox-neo/src/engine/scorer.h
  /usr/include/absl/base/attributes.h
  /usr/include/absl/base/config.h

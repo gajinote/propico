@@ -8,3 +8,6 @@ build/pobox_client
 
 *.o
 *.a
+
+build/Testing/*.*
+build/Testing/*
