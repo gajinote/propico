@@ -35,20 +35,49 @@ class PoBoxClient {
     }
   }
 
+  void Learn(const std::string& candidate_id, const std::string& prefix) {
+    pobox::LearnRequest request;
+    request.set_candidate_id(candidate_id);
+    request.set_prefix(prefix);
+
+    pobox::LearnResponse response;
+    grpc::ClientContext context;
+
+    const grpc::Status status = stub_->Learn(&context, request, &response);
+    if (!status.ok()) {
+      std::cerr << "Learn RPC failed: " << status.error_message() << "\n";
+      return;
+    }
+
+    if (response.success()) {
+      std::cout << "Learned: " << candidate_id << " (prefix: " << prefix << ")\n";
+    } else {
+      std::cerr << "Learn failed\n";
+    }
+  }
+
  private:
   std::unique_ptr<pobox::PoBox::Stub> stub_;
 };
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << " <prefix>\n";
+    std::cerr << "Usage: " << argv[0] << " search <prefix>\n"
+              << "       " << argv[0] << " learn <candidate_id> <prefix>\n";
     return 1;
   }
 
-  const std::string prefix = argv[1];
+  const std::string command = argv[1];
   PoBoxClient client(
       grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
 
-  client.Search(prefix);
+  if (command == "search" && argc >= 3) {
+    client.Search(argv[2]);
+  } else if (command == "learn" && argc >= 4) {
+    client.Learn(argv[2], argv[3]);
+  } else {
+    std::cerr << "Invalid command or arguments\n";
+    return 1;
+  }
   return 0;
 }
