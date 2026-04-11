@@ -3,11 +3,12 @@
 
 CLAUDE.md
 
-build/pobox_server
-build/pobox_client
+# CMake build directory
+build/
 
+# Object and archive files
 *.o
 *.a
 
-build/Testing/*.*
-build/Testing/*
+# Database files
+*.db
