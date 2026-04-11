@@ -54,9 +54,24 @@ public:
     }
 
     grpc::Status Sync(grpc::ServerContext* /*context*/,
-                      const pobox::SyncRequest* /*request*/,
-                      pobox::SyncResponse* /*response*/) override {
-        std::cout << "A sync request was received\n";
+                      const pobox::SyncRequest* request,
+                      pobox::SyncResponse* response) override {
+        const auto  last_sync_ts = request->last_sync_timestamp();
+        const auto  server_ts    = static_cast<std::int64_t>(std::time(nullptr));
+        std::cout << "A sync request was received (last_sync_timestamp=" << last_sync_ts
+                  << ")\n";
+
+        auto rows = history_.load_updated_since(last_sync_ts);
+
+        response->set_server_timestamp(server_ts);
+        for (const auto& row : rows) {
+            auto* entry = response->add_entries();
+            entry->set_candidate_id(row.candidate_id);
+            entry->set_count(row.count);
+            entry->set_updated_at(row.updated_at);
+        }
+
+        std::cout << "Sync response: " << rows.size() << " updated entries\n";
         return grpc::Status::OK;
     }
 

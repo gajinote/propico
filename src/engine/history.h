@@ -3,10 +3,18 @@
 #include <cstdint>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 struct sqlite3;
 
 namespace pobox::engine {
+
+// 同期エントリ（SyncResponse のペイロード）
+struct SyncRow {
+    std::string  candidate_id;
+    int          count;
+    std::int64_t updated_at;
+};
 
 // 選択履歴を SQLite に永続化するクラス
 //
@@ -27,6 +35,14 @@ public:
 
     // candidate_id → selection_count のマップを返す（Scorer::apply に渡す用）
     [[nodiscard]] std::unordered_map<std::string, int> load_boost_map() const;
+
+    // since 以降に更新された score_override エントリを返す
+    // since == 0 → 全件取得 / since > 0 → WHERE updated_at > since
+    [[nodiscard]] std::vector<SyncRow> load_updated_since(std::int64_t since) const;
+
+    // 外部から受け取った差分をマージする（Last-Write-Wins）
+    // remote.updated_at > local.updated_at の場合のみ上書き
+    void merge_entries(const std::vector<SyncRow>& entries);
 
     // コピー禁止・ムーブのみ可
     History(const History&)            = delete;

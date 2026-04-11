@@ -56,6 +56,28 @@ class PoBoxClient {
     }
   }
 
+  void Sync(std::int64_t last_sync_timestamp) {
+    pobox::SyncRequest request;
+    request.set_last_sync_timestamp(last_sync_timestamp);
+
+    pobox::SyncResponse response;
+    grpc::ClientContext context;
+
+    const grpc::Status status = stub_->Sync(&context, request, &response);
+    if (!status.ok()) {
+      std::cerr << "Sync RPC failed: " << status.error_message() << "\n";
+      return;
+    }
+
+    std::cout << "server_timestamp=" << response.server_timestamp() << "\n";
+    std::cout << "entries=" << response.entries_size() << "\n";
+    for (const auto& entry : response.entries()) {
+      std::cout << entry.candidate_id()
+                << "  count=" << entry.count()
+                << "  updated_at=" << entry.updated_at() << "\n";
+    }
+  }
+
  private:
   std::unique_ptr<pobox::PoBox::Stub> stub_;
 };
@@ -63,7 +85,8 @@ class PoBoxClient {
 int main(int argc, char* argv[]) {
   if (argc < 2) {
     std::cerr << "Usage: " << argv[0] << " search <prefix>\n"
-              << "       " << argv[0] << " learn <candidate_id> <prefix>\n";
+              << "       " << argv[0] << " learn <candidate_id> <prefix>\n"
+              << "       " << argv[0] << " sync [<last_sync_timestamp>]\n";
     return 1;
   }
 
@@ -75,6 +98,9 @@ int main(int argc, char* argv[]) {
     client.Search(argv[2]);
   } else if (command == "learn" && argc >= 4) {
     client.Learn(argv[2], argv[3]);
+  } else if (command == "sync") {
+    const std::int64_t last_sync_ts = (argc >= 3) ? std::stoll(argv[2]) : 0;
+    client.Sync(last_sync_ts);
   } else {
     std::cerr << "Invalid command or arguments\n";
     return 1;

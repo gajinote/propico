@@ -107,4 +107,54 @@ std::unordered_map<std::string, int> History::load_boost_map() const {
     return result;
 }
 
+std::vector<SyncRow> History::load_updated_since(std::int64_t since) const {
+    std::vector<SyncRow> result;
+
+    sqlite3_stmt* stmt = nullptr;
+    const char* sql = (since == 0)
+        ? "SELECT candidate_id, count, updated_at FROM score_override;"
+        : "SELECT candidate_id, count, updated_at FROM score_override WHERE updated_at > ?;";
+
+    if (sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        return result;
+    }
+
+    if (since != 0) {
+        sqlite3_bind_int64(stmt, 1, since);
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        const char* id = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        if (id) {
+            SyncRow row;
+            row.candidate_id = id;
+            row.count        = sqlite3_column_int(stmt, 1);
+            row.updated_at   = sqlite3_column_int64(stmt, 2);
+            result.push_back(std::move(row));
+        }
+    }
+    sqlite3_finalize(stmt);
+    return result;
+}
+
+void History::merge_entries(const std::vector<SyncRow>& entries) {
+    for (const auto& e : entries) {
+        sqlite3_stmt* stmt = nullptr;
+        const char* sql = R"sql(
+            INSERT INTO score_override (candidate_id, count, updated_at)
+                VALUES (?, ?, ?)
+            ON CONFLICT(candidate_id) DO UPDATE SET
+                count      = excluded.count,
+                updated_at = excluded.updated_at
+            WHERE excluded.updated_at > updated_at;
+        )sql";
+        sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        sqlite3_bind_text(stmt, 1, e.candidate_id.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 2, e.count);
+        sqlite3_bind_int64(stmt, 3, e.updated_at);
+        sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+    }
+}
+
 } // namespace pobox::engine
