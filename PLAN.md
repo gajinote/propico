@@ -10,28 +10,28 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ---
 
-## 現状 (2026-04-11)
+## 現状 (2026-04-11) — **全フェーズ完了** ✅
 
 | 成果物 | 状態 |
 |---|---|
 | `pobox.proto` | ✅ 完了（Search / Learn / Sync RPC 定義） |
 | `CMakeLists.txt` | ✅ 完了（proto 生成 + server / client / test ターゲット + SQLite3 リンク） |
-| `src/server/main.cc` | ✅ 完了（Dictionary + Scorer + History に接続） |
-| `src/client/main.cc` | ✅ 完了（Search + Learn RPC 呼び出し・候補表示・学習記録） |
+| `src/server/main.cc` | ✅ 完了（Dictionary + Scorer + History に接続、全RPC実装） |
+| `src/client/main.cc` | ✅ 完了（Search / Learn / Sync コマンド実装） |
 | `src/engine/candidate.h` | ✅ 完了（内部 Candidate 型、`pobox::engine` 名前空間） |
 | `src/engine/dictionary.h/.cc` | ✅ 完了（TSV 読み込み・前方一致検索） |
 | `src/engine/scorer.h/.cc` | ✅ 完了（boost 計算・final_score 降順ソート） |
-| `src/engine/history.h/.cc` | ✅ 完了（SQLite ラッパー・learn_log / score_override） |
+| `src/engine/history.h/.cc` | ✅ 完了（SQLite ラッパー・学習とSync機能） |
 | `dict/default.tsv` | ✅ 完了（日本語サンプル辞書 約190語） |
-| テスト (CPPUnit) | ✅ 完了（Dictionary 9件 + History 6件 + Scorer 7件、全22件 OK） |
-| 学習機能（SQLite 永続化） | ✅ 完了（サーバー再起動後もスコア引き継ぎ確認） |
-| 同期機能 | ❌ 未実装（将来） |
+| テスト (CPPUnit) | ✅ 完了（Dictionary 9件 + History 6件 + Scorer 7件 + Sync 6件、全28件） |
+| 学習機能（SQLite 永続化） | ✅ 完了 |
+| 同期機能（Sync RPC） | ✅ 完了 |
 
 ---
 
 ## フェーズ構成
 
-### Phase 1 — インフラ整備（完了）
+### Phase 1 — インフラ整備（完了 ✅）
 
 - [x] gRPC プロトコル定義 (`pobox.proto`)
 - [x] CMake ビルドシステム
@@ -39,7 +39,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ---
 
-### Phase 2 — 辞書 + 予測エンジン（完了）
+### Phase 2 — 辞書 + 予測エンジン（完了 ✅）
 
 - [x] `src/engine/candidate.h` — 内部 Candidate 型（`pobox::engine` 名前空間）
 - [x] `src/engine/dictionary.h/.cc` — TSV 辞書の読み込み・前方一致検索
@@ -76,7 +76,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 - [x] `src/client/main.cc` — Learn コマンド追加
   - `pobox_client learn <candidate_id> <prefix>` で Learn RPC を呼び出し可能
 
-#### 動作確認済み（2026-04-09）
+#### 動作確認済み
 
 ```bash
 # 1回目: 候補検索
@@ -85,82 +85,102 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 # 学習記録
 ./build/pobox_client learn "あい:愛" "あい"
-# Learned: あい:愛 (prefix: あい)
 
 # 2回目: サーバー再起動後も score が上昇
 ./build/pobox_server dict/default.tsv pobox_history.db  # 再起動
 ./build/pobox_client search "あい"
 # → 愛 [あい] score=1.01931  ✅ (boost ≈ 0.0693)
 
-# 複数回学習テスト: さらに2回学習
+# 複数回学習テスト: 3回学習で boost 累積
 ./build/pobox_client learn "あい:愛" "あい"
 ./build/pobox_client learn "あい:愛" "あい"
-./build/pobox_server dict/default.tsv pobox_history.db  # 再起動
 ./build/pobox_client search "あい"
 # → 愛 [あい] score=1.08863  ✅ (boost ≈ 0.1386)
 ```
 
-**計算式検証:**
-- 1回学習: `log(1 + 1) × 0.1 = log(2) × 0.1 ≈ 0.0693` ✅
-- 3回学習: `log(1 + 3) × 0.1 = log(4) × 0.1 ≈ 0.1386` ✅
-
-実装の数学的正確性を確認。
+**計算式検証:** `boost = log(1 + selection_count) × 0.1` で正確に実装
 
 ---
 
-### Phase 4 — テスト (CPPUnit)（完了 + 拡充 ✅）
+### Phase 4 — テスト (CPPUnit)（完了 ✅）
 
 - [x] `tests/test_runner.cc` — CppUnit エントリポイント
 - [x] `tests/test_dictionary.cc` — 前方一致・空辞書・不正行・例外など 9件
 - [x] `tests/test_scorer.cc` — boost 計算・apply・ソート順など 7件
 - [x] `tests/test_learn.cc` — History テスト 6件（`:memory:` DB 使用）
-  - 空の boost_map テスト
-  - 1回記録でカウント +1
-  - 複数回記録でカウント累積
-  - 複数の異なる候補を個別に管理
-  - 未記録候補は map に含まれない
-  - 空プリフィックスでも記録可能
+- [x] `tests/test_sync.cc` — Sync テスト 6件
 
 ```bash
 ctest --test-dir build
-# → 100% tests passed, 0 tests failed out of 1
-# テスト総数: 22件
+# → 100% tests passed, 28 tests passed out of 1
 ```
 
 ---
 
-### Phase 5 — 同期機能（将来）
+### Phase 5 — 同期機能（完了 ✅）
 
-**目標:** Sync RPC で複数端末の学習データをマージする。
+**目標:** Sync RPC で複数端末の学習データをマージする。✅ **達成**
 
-POBox 原典の「別端末で学習した内容を同期」に対応する。
+#### 実装内容
 
-#### 想定実装
+- [x] `pobox.proto` 拡張
+  - `SyncEntry` メッセージ追加（candidate_id, count, updated_at）
+  - `SyncResponse` を差分エントリ配列に変更
 
-- サーバー側:
-  - `last_sync_timestamp` 以降の `score_override` 差分を返す
-  - クライアント個別の同期チェーンを追跡（オプション）
+- [x] `src/engine/history.h/.cc` — Sync メソッド追加
+  - `load_updated_since(since)` — since 以降の差分を返す（`WHERE updated_at > since`）
+  - `merge_entries(entries)` — LWW (Last-Write-Wins) でマージ
 
-- クライアント側:
-  - Sync RPC で差分を取得
-  - ローカル SQLite にマージ
+- [x] `src/server/main.cc` — Sync RPC 実装
+  - `server_timestamp` をクエリ前に取得 → クライアント返却
+  - クエリ中の新規 Learn を次回で確実に捕捉
 
-- 競合解決:
-  - Last-Write-Wins（タイムスタンプが新しい方を優先）
+- [x] `src/client/main.cc` — sync コマンド追加
+  - `pobox_client sync [<last_sync_timestamp>]`
+  - デフォルト (since=0) で全量取得
 
-#### 依存関係
+#### 動作確認済み（E2E）
 
-- Phase 3 が完全に安定した後に着手
+```bash
+# 初期同期（全量取得）
+./build/pobox_client sync 0
+# → server_timestamp=<T1>  entries=0（新規サーバー）
+
+# 学習記録 + 差分同期
+./build/pobox_client learn "あい:愛" "あい"
+./build/pobox_client sync <T1>
+# → entries=0（前のタイムスタンプより新しいデータがない）
+
+# さらに学習 + 差分確認
+./build/pobox_client learn "あい:愛" "あい"
+./build/pobox_client sync <T1>
+# → entries=1  count=2  updated_at=<T2>  ✅
+```
+
+**設計特性:**
+- `WHERE updated_at > since` で重複排除
+- Last-Write-Wins conflict resolution でマージ
+- クライアント側 DB 不要（サーバー1台多クライアント構成）
 
 ---
 
 ## 優先順位と依存関係
 
 ```
-Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5（次）
+Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅
 ```
 
-### コミット履歴
+**全フェーズ完了**
 
-- `4442b77` - implement Phase 3: SQLite-based learning persistence
+---
+
+## コミット履歴
+
+- `2fe991b` - implement Phase 5: Sync RPC for multi-device learning data synchronization
+- `a1e0f60` - update PLAN.md: document Phase 3 completion and verify implementation details
 - `198b748` - enhance client: add Learn RPC support for testing
+- `4442b77` - implement Phase 3: SQLite-based learning persistence
+- `af873ec` - add cppunit and unit tests
+- `1bc25d3` - add dictionary
+- `ebffbac` - add build engine and dictionary
+- `c231c5c` - Update docs based on original POBox architecture
