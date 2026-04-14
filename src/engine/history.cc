@@ -19,6 +19,22 @@ void exec_or_throw(sqlite3* db, const char* sql) {
     }
 }
 
+sqlite3_stmt* prepare_or_throw(sqlite3* db, const char* sql) {
+    sqlite3_stmt* stmt = nullptr;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        throw std::runtime_error(std::string("SQLite prepare failed: ") + sqlite3_errmsg(db));
+    }
+    return stmt;
+}
+
+void step_done_or_throw(sqlite3* db, sqlite3_stmt* stmt) {
+    const int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    if (rc != SQLITE_DONE) {
+        throw std::runtime_error(std::string("SQLite step failed: ") + sqlite3_errmsg(db));
+    }
+}
+
 } // namespace
 
 History::History(const std::string& db_path) {
@@ -58,20 +74,17 @@ void History::record(const std::string& candidate_id, const std::string& prefix)
 
     // 1. learn_log に生ログを追記
     {
-        sqlite3_stmt* stmt = nullptr;
         const char* sql =
             "INSERT INTO learn_log (candidate_id, prefix, selected_at) VALUES (?, ?, ?);";
-        sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        sqlite3_stmt* stmt = prepare_or_throw(db_, sql);
         sqlite3_bind_text(stmt, 1, candidate_id.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt, 2, prefix.c_str(),       -1, SQLITE_TRANSIENT);
         sqlite3_bind_int64(stmt, 3, now);
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
+        step_done_or_throw(db_, stmt);
     }
 
     // 2. score_override のカウントを +1（存在しなければ新規挿入）
     {
-        sqlite3_stmt* stmt = nullptr;
         const char* sql = R"sql(
             INSERT INTO score_override (candidate_id, count, updated_at)
                 VALUES (?, 1, ?)
@@ -79,11 +92,10 @@ void History::record(const std::string& candidate_id, const std::string& prefix)
                 count      = count + 1,
                 updated_at = excluded.updated_at;
         )sql";
-        sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        sqlite3_stmt* stmt = prepare_or_throw(db_, sql);
         sqlite3_bind_text(stmt, 1, candidate_id.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_int64(stmt, 2, now);
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
+        step_done_or_throw(db_, stmt);
     }
 }
 
@@ -138,22 +150,20 @@ std::vector<SyncRow> History::load_updated_since(std::int64_t since) const {
 }
 
 void History::merge_entries(const std::vector<SyncRow>& entries) {
+    const char* sql = R"sql(
+        INSERT INTO score_override (candidate_id, count, updated_at)
+            VALUES (?, ?, ?)
+        ON CONFLICT(candidate_id) DO UPDATE SET
+            count      = excluded.count,
+            updated_at = excluded.updated_at
+        WHERE excluded.updated_at > score_override.updated_at;
+    )sql";
     for (const auto& e : entries) {
-        sqlite3_stmt* stmt = nullptr;
-        const char* sql = R"sql(
-            INSERT INTO score_override (candidate_id, count, updated_at)
-                VALUES (?, ?, ?)
-            ON CONFLICT(candidate_id) DO UPDATE SET
-                count      = excluded.count,
-                updated_at = excluded.updated_at
-            WHERE excluded.updated_at > score_override.updated_at;
-        )sql";
-        sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        sqlite3_stmt* stmt = prepare_or_throw(db_, sql);
         sqlite3_bind_text(stmt, 1, e.candidate_id.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_int(stmt, 2, e.count);
         sqlite3_bind_int64(stmt, 3, e.updated_at);
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
+        step_done_or_throw(db_, stmt);
     }
 }
 
