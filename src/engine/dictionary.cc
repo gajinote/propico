@@ -31,7 +31,8 @@ std::optional<Candidate> parse_line(std::string_view line) {
     if (!reading_sv || !text_sv || line.empty()) return std::nullopt;
 
     float score = 0.5f;
-    std::from_chars(line.data(), line.data() + line.size(), score);
+    const auto [ptr, ec] = std::from_chars(line.data(), line.data() + line.size(), score);
+    if (ec != std::errc{}) return std::nullopt;
 
     Candidate c;
     c.reading    = std::string(*reading_sv);
