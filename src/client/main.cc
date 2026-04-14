@@ -99,7 +99,15 @@ int main(int argc, char* argv[]) {
   } else if (command == "learn" && argc >= 4) {
     client.Learn(argv[2], argv[3]);
   } else if (command == "sync") {
-    const std::int64_t last_sync_ts = (argc >= 3) ? std::stoll(argv[2]) : 0;
+    std::int64_t last_sync_ts = 0;
+    if (argc >= 3) {
+      try {
+        last_sync_ts = std::stoll(argv[2]);
+      } catch (const std::exception&) {
+        std::cerr << "Invalid timestamp: " << argv[2] << "\n";
+        return 1;
+      }
+    }
     client.Sync(last_sync_ts);
   } else {
     std::cerr << "Invalid command or arguments\n";
