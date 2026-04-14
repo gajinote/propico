@@ -48,8 +48,13 @@ public:
         const auto& id     = request->candidate_id();
         const auto& prefix = request->prefix();
         std::cout << "A learn request for candidate_id='" << id << "' was received\n";
-        history_.record(id, prefix);
-        response->set_success(true);
+        try {
+            history_.record(id, prefix);
+            response->set_success(true);
+        } catch (const std::exception& e) {
+            response->set_success(false);
+            response->set_error_message(e.what());
+        }
         return grpc::Status::OK;
     }
 

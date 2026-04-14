@@ -53,7 +53,7 @@ class PoBoxClient {
     if (response.success()) {
       std::cout << "Learned: " << candidate_id << " (prefix: " << prefix << ")\n";
     } else {
-      std::cerr << "Learn failed\n";
+      std::cerr << "Learn failed: " << response.error_message() << "\n";
     }
   }
 
