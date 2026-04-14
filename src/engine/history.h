@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -49,7 +50,8 @@ public:
     History& operator=(const History&) = delete;
 
 private:
-    sqlite3* db_ = nullptr;
+    sqlite3*           db_ = nullptr;
+    mutable std::mutex mu_;
 
     void init_schema();
 };

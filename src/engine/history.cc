@@ -70,6 +70,7 @@ void History::init_schema() {
 }
 
 void History::record(const std::string& candidate_id, const std::string& prefix) {
+    std::lock_guard<std::mutex> lock(mu_);
     const std::int64_t now = static_cast<std::int64_t>(std::time(nullptr));
 
     // 1. learn_log に生ログを追記
@@ -100,6 +101,7 @@ void History::record(const std::string& candidate_id, const std::string& prefix)
 }
 
 std::unordered_map<std::string, int> History::load_boost_map() const {
+    std::lock_guard<std::mutex> lock(mu_);
     std::unordered_map<std::string, int> result;
 
     sqlite3_stmt* stmt = nullptr;
@@ -120,6 +122,7 @@ std::unordered_map<std::string, int> History::load_boost_map() const {
 }
 
 std::vector<SyncRow> History::load_updated_since(std::int64_t since) const {
+    std::lock_guard<std::mutex> lock(mu_);
     std::vector<SyncRow> result;
 
     sqlite3_stmt* stmt = nullptr;
@@ -150,6 +153,7 @@ std::vector<SyncRow> History::load_updated_since(std::int64_t since) const {
 }
 
 void History::merge_entries(const std::vector<SyncRow>& entries) {
+    std::lock_guard<std::mutex> lock(mu_);
     const char* sql = R"sql(
         INSERT INTO score_override (candidate_id, count, updated_at)
             VALUES (?, ?, ?)
