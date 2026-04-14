@@ -146,7 +146,7 @@ void History::merge_entries(const std::vector<SyncRow>& entries) {
             ON CONFLICT(candidate_id) DO UPDATE SET
                 count      = excluded.count,
                 updated_at = excluded.updated_at
-            WHERE excluded.updated_at > updated_at;
+            WHERE excluded.updated_at > score_override.updated_at;
         )sql";
         sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         sqlite3_bind_text(stmt, 1, e.candidate_id.c_str(), -1, SQLITE_TRANSIENT);
