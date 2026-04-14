@@ -74,12 +74,13 @@ void History::record(const std::string& candidate_id, const std::string& prefix)
     const std::int64_t now = static_cast<std::int64_t>(std::time(nullptr));
 
     // 1. learn_log に生ログを追記
+    // candidate_id/prefix は引数参照のため step_done_or_throw(finalize) まで生存が保証される
     {
         const char* sql =
             "INSERT INTO learn_log (candidate_id, prefix, selected_at) VALUES (?, ?, ?);";
         sqlite3_stmt* stmt = prepare_or_throw(db_, sql);
-        sqlite3_bind_text(stmt, 1, candidate_id.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt, 2, prefix.c_str(),       -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 1, candidate_id.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, prefix.c_str(),       -1, SQLITE_STATIC);
         sqlite3_bind_int64(stmt, 3, now);
         step_done_or_throw(db_, stmt);
     }
@@ -94,7 +95,7 @@ void History::record(const std::string& candidate_id, const std::string& prefix)
                 updated_at = excluded.updated_at;
         )sql";
         sqlite3_stmt* stmt = prepare_or_throw(db_, sql);
-        sqlite3_bind_text(stmt, 1, candidate_id.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 1, candidate_id.c_str(), -1, SQLITE_STATIC);
         sqlite3_bind_int64(stmt, 2, now);
         step_done_or_throw(db_, stmt);
     }
@@ -162,9 +163,10 @@ void History::merge_entries(const std::vector<SyncRow>& entries) {
             updated_at = excluded.updated_at
         WHERE excluded.updated_at > score_override.updated_at;
     )sql";
+    // e.candidate_id はループ本体内で生存が保証される（step_done_or_throw で finalize まで完了）
     for (const auto& e : entries) {
         sqlite3_stmt* stmt = prepare_or_throw(db_, sql);
-        sqlite3_bind_text(stmt, 1, e.candidate_id.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 1, e.candidate_id.c_str(), -1, SQLITE_STATIC);
         sqlite3_bind_int(stmt, 2, e.count);
         sqlite3_bind_int64(stmt, 3, e.updated_at);
         step_done_or_throw(db_, stmt);
