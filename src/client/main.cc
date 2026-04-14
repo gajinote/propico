@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -91,8 +92,10 @@ int main(int argc, char* argv[]) {
   }
 
   const std::string command = argv[1];
+  const char* server_env = std::getenv("POBOX_SERVER");
+  const std::string server_addr = server_env ? server_env : "localhost:50051";
   PoBoxClient client(
-      grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
+      grpc::CreateChannel(server_addr, grpc::InsecureChannelCredentials()));
 
   if (command == "search" && argc >= 3) {
     client.Search(argv[2]);
