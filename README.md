@@ -294,7 +294,7 @@ ctest --test-dir build --output-on-failure
 ## ライセンス・参考
 
 本プロジェクトは POBox の設計思想を再実装したものです。  
-POBox の原論文: [増井俊之, "POBox: A Pen-Based Interface Using Gesture Prediction"](https://www.sonycsl.co.jp/)
+POBox の原論文: [増井俊之, "An Efficient Text Input Method for Handheld and Ubiquitous Computers"](http://www.pitecan.com/papers/HUC99/HUC99.pdf)
 
 ---
 
