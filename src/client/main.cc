@@ -4,18 +4,18 @@
 #include <string>
 
 #include <grpcpp/grpcpp.h>
-#include "pobox.grpc.pb.h"
+#include "propico.grpc.pb.h"
 
-class PoBoxClient {
+class PropicoClient {
  public:
-  explicit PoBoxClient(std::shared_ptr<grpc::Channel> channel)
-      : stub_(pobox::PoBox::NewStub(channel)) {}
+  explicit PropicoClient(std::shared_ptr<grpc::Channel> channel)
+      : stub_(propico::Propico::NewStub(channel)) {}
 
   void Search(const std::string& prefix) {
-    pobox::SearchRequest request;
+    propico::SearchRequest request;
     request.set_prefix(prefix);
 
-    pobox::SearchResponse response;
+    propico::SearchResponse response;
     grpc::ClientContext context;
 
     const grpc::Status status = stub_->Search(&context, request, &response);
@@ -37,11 +37,11 @@ class PoBoxClient {
   }
 
   void Learn(const std::string& candidate_id, const std::string& prefix) {
-    pobox::LearnRequest request;
+    propico::LearnRequest request;
     request.set_candidate_id(candidate_id);
     request.set_prefix(prefix);
 
-    pobox::LearnResponse response;
+    propico::LearnResponse response;
     grpc::ClientContext context;
 
     const grpc::Status status = stub_->Learn(&context, request, &response);
@@ -58,10 +58,10 @@ class PoBoxClient {
   }
 
   void Sync(std::int64_t last_sync_timestamp) {
-    pobox::SyncRequest request;
+    propico::SyncRequest request;
     request.set_last_sync_timestamp(last_sync_timestamp);
 
-    pobox::SyncResponse response;
+    propico::SyncResponse response;
     grpc::ClientContext context;
 
     const grpc::Status status = stub_->Sync(&context, request, &response);
@@ -80,7 +80,7 @@ class PoBoxClient {
   }
 
  private:
-  std::unique_ptr<pobox::PoBox::Stub> stub_;
+  std::unique_ptr<propico::Propico::Stub> stub_;
 };
 
 int main(int argc, char* argv[]) {
@@ -92,9 +92,9 @@ int main(int argc, char* argv[]) {
   }
 
   const std::string command = argv[1];
-  const char* server_env = std::getenv("POBOX_SERVER");
+  const char* server_env = std::getenv("PROPICO_SERVER");
   const std::string server_addr = server_env ? server_env : "localhost:50051";
-  PoBoxClient client(
+  PropicoClient client(
       grpc::CreateChannel(server_addr, grpc::InsecureChannelCredentials()));
 
   if (command == "search" && argc >= 3) {

@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace pobox::engine {
+namespace propico::engine {
 
 // エンジン内部で扱う候補の表現
 // proto の Candidate とは独立しており、scorer がスコアを確定してから変換する
@@ -17,4 +17,4 @@ struct Candidate {
     [[nodiscard]] float final_score() const noexcept { return base_score + boost; }
 };
 
-} // namespace pobox::engine
+} // namespace propico::engine

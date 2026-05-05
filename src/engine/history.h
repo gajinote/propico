@@ -8,7 +8,7 @@
 
 struct sqlite3;
 
-namespace pobox::engine {
+namespace propico::engine {
 
 // 同期エントリ（SyncResponse のペイロード）
 struct SyncRow {
@@ -56,4 +56,4 @@ private:
     void init_schema();
 };
 
-} // namespace pobox::engine
+} // namespace propico::engine

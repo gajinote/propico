@@ -4,7 +4,7 @@
 #include <cmath>
 #include <ranges>
 
-namespace pobox::engine {
+namespace propico::engine {
 
 float Scorer::compute_boost(int selection_count) const noexcept {
     if (selection_count <= 0) return 0.0f;
@@ -27,4 +27,4 @@ std::vector<Candidate> Scorer::apply(
     return candidates;
 }
 
-} // namespace pobox::engine
+} // namespace propico::engine

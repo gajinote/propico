@@ -16,7 +16,7 @@ class HistoryTest : public CppUnit::TestFixture {
 public:
     void setUp() override {
         // ":memory:" を使うことでファイルを作らずテスト実行
-        history_ = std::make_unique<pobox::engine::History>(":memory:");
+        history_ = std::make_unique<propico::engine::History>(":memory:");
     }
 
     void tearDown() override {
@@ -70,7 +70,7 @@ public:
     }
 
 private:
-    std::unique_ptr<pobox::engine::History> history_;
+    std::unique_ptr<propico::engine::History> history_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(HistoryTest);

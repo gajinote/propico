@@ -1,4 +1,4 @@
-# pobox-neo 実装計画
+# Propico 実装計画
 
 ## 設計方針（原典 POBox より）
 
@@ -14,11 +14,11 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 | 成果物 | 状態 |
 |---|---|
-| `pobox.proto` | ✅ 完了（Search / Learn / Sync RPC 定義） |
+| `propico.proto` | ✅ 完了（Search / Learn / Sync RPC 定義） |
 | `CMakeLists.txt` | ✅ 完了（proto 生成 + server / client / test ターゲット + SQLite3 リンク） |
 | `src/server/main.cc` | ✅ 完了（Dictionary + Scorer + History に接続、全RPC実装） |
 | `src/client/main.cc` | ✅ 完了（Search / Learn / Sync コマンド実装） |
-| `src/engine/candidate.h` | ✅ 完了（内部 Candidate 型、`pobox::engine` 名前空間） |
+| `src/engine/candidate.h` | ✅ 完了（内部 Candidate 型、`propico::engine` 名前空間） |
 | `src/engine/dictionary.h/.cc` | ✅ 完了（TSV 読み込み・前方一致検索） |
 | `src/engine/scorer.h/.cc` | ✅ 完了（boost 計算・final_score 降順ソート） |
 | `src/engine/history.h/.cc` | ✅ 完了（SQLite ラッパー・学習とSync機能） |
@@ -33,7 +33,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ### Phase 1 — インフラ整備（完了 ✅）
 
-- [x] gRPC プロトコル定義 (`pobox.proto`)
+- [x] gRPC プロトコル定義 (`propico.proto`)
 - [x] CMake ビルドシステム
 - [x] サーバー / クライアント スケルトン
 
@@ -41,7 +41,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ### Phase 2 — 辞書 + 予測エンジン（完了 ✅）
 
-- [x] `src/engine/candidate.h` — 内部 Candidate 型（`pobox::engine` 名前空間）
+- [x] `src/engine/candidate.h` — 内部 Candidate 型（`propico::engine` 名前空間）
 - [x] `src/engine/dictionary.h/.cc` — TSV 辞書の読み込み・前方一致検索
 - [x] `src/engine/scorer.h/.cc` — `log(1+count) × decay_factor` による boost 計算
 - [x] `src/server/main.cc` — Search RPC に辞書検索を接続
@@ -49,7 +49,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 **動作確認済み:**
 ```bash
-./build/pobox_client search "あい"
+./build/propico_client search "あい"
 # → 愛 [あい] score=0.95 / 挨拶 [あいさつ] score=0.90 / ...
 ```
 
@@ -69,32 +69,32 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 - [x] `src/server/main.cc` — History 統合
   - インメモリ `unordered_map` を `History` に置き換え
-  - サーバーの `db_path` を第3引数で指定可能（デフォルト: `pobox_history.db`）
+  - サーバーの `db_path` を第3引数で指定可能（デフォルト: `propico_history.db`）
   - `Search` RPC 時に `history_.load_boost_map()` でブースト値を取得
   - `Learn` RPC 時に `history_.record(id, prefix)` で選択を記録
 
 - [x] `src/client/main.cc` — Learn コマンド追加
-  - `pobox_client learn <candidate_id> <prefix>` で Learn RPC を呼び出し可能
+  - `propico_client learn <candidate_id> <prefix>` で Learn RPC を呼び出し可能
 
 #### 動作確認済み
 
 ```bash
 # 1回目: 候補検索
-./build/pobox_client search "あい"
+./build/propico_client search "あい"
 # → 愛 [あい] score=0.95
 
 # 学習記録
-./build/pobox_client learn "あい:愛" "あい"
+./build/propico_client learn "あい:愛" "あい"
 
 # 2回目: サーバー再起動後も score が上昇
-./build/pobox_server dict/default.tsv pobox_history.db  # 再起動
-./build/pobox_client search "あい"
+./build/propico_server dict/default.tsv propico_history.db  # 再起動
+./build/propico_client search "あい"
 # → 愛 [あい] score=1.01931  ✅ (boost ≈ 0.0693)
 
 # 複数回学習テスト: 3回学習で boost 累積
-./build/pobox_client learn "あい:愛" "あい"
-./build/pobox_client learn "あい:愛" "あい"
-./build/pobox_client search "あい"
+./build/propico_client learn "あい:愛" "あい"
+./build/propico_client learn "あい:愛" "あい"
+./build/propico_client search "あい"
 # → 愛 [あい] score=1.08863  ✅ (boost ≈ 0.1386)
 ```
 
@@ -123,7 +123,7 @@ ctest --test-dir build
 
 #### 実装内容
 
-- [x] `pobox.proto` 拡張
+- [x] `propico.proto` 拡張
   - `SyncEntry` メッセージ追加（candidate_id, count, updated_at）
   - `SyncResponse` を差分エントリ配列に変更
 
@@ -136,24 +136,24 @@ ctest --test-dir build
   - クエリ中の新規 Learn を次回で確実に捕捉
 
 - [x] `src/client/main.cc` — sync コマンド追加
-  - `pobox_client sync [<last_sync_timestamp>]`
+  - `propico_client sync [<last_sync_timestamp>]`
   - デフォルト (since=0) で全量取得
 
 #### 動作確認済み（E2E）
 
 ```bash
 # 初期同期（全量取得）
-./build/pobox_client sync 0
+./build/propico_client sync 0
 # → server_timestamp=<T1>  entries=0（新規サーバー）
 
 # 学習記録 + 差分同期
-./build/pobox_client learn "あい:愛" "あい"
-./build/pobox_client sync <T1>
+./build/propico_client learn "あい:愛" "あい"
+./build/propico_client sync <T1>
 # → entries=0（前のタイムスタンプより新しいデータがない）
 
 # さらに学習 + 差分確認
-./build/pobox_client learn "あい:愛" "あい"
-./build/pobox_client sync <T1>
+./build/propico_client learn "あい:愛" "あい"
+./build/propico_client sync <T1>
 # → entries=1  count=2  updated_at=<T2>  ✅
 ```
 

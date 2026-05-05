@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 
 // テスト用 TSV を一時ファイルに書き出すヘルパー
 static fs::path write_temp_tsv(const std::string& content) {
-    auto path = fs::temp_directory_path() / "pobox_test_dict.tsv";
+    auto path = fs::temp_directory_path() / "propico_test_dict.tsv";
     std::ofstream ofs(path);
     ofs << content;
     return path;
@@ -101,13 +101,13 @@ public:
 
     // 存在しないファイルは例外
     void test_load_nonexistent_throws() {
-        pobox::engine::Dictionary d;
+        propico::engine::Dictionary d;
         CPPUNIT_ASSERT_THROW(d.load("/nonexistent/path.tsv"), std::runtime_error);
     }
 
 private:
     fs::path                  dict_path_;
-    pobox::engine::Dictionary dict_;
+    propico::engine::Dictionary dict_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DictionaryTest);

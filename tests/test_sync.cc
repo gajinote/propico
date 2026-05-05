@@ -18,7 +18,7 @@ class SyncTest : public CppUnit::TestFixture {
 
 public:
     void setUp() override {
-        history_ = std::make_unique<pobox::engine::History>(":memory:");
+        history_ = std::make_unique<propico::engine::History>(":memory:");
     }
 
     void tearDown() override {
@@ -55,7 +55,7 @@ public:
 
     // merge で新規エントリが挿入される
     void test_merge_insert_new() {
-        std::vector<pobox::engine::SyncRow> entries = {
+        std::vector<propico::engine::SyncRow> entries = {
             {"id1:text1", 5, 1000},
         };
         history_->merge_entries(entries);
@@ -67,7 +67,7 @@ public:
 
     // merge で複数エントリが挿入される
     void test_merge_multiple_entries() {
-        std::vector<pobox::engine::SyncRow> entries = {
+        std::vector<propico::engine::SyncRow> entries = {
             {"id1:text1", 5, 1000},
             {"id2:text2", 3, 1001},
             {"id3:text3", 7, 999},
@@ -93,7 +93,7 @@ public:
         const std::int64_t local_time = local_rows[0].updated_at;
 
         // リモートから newer timestamp で merge
-        std::vector<pobox::engine::SyncRow> remote_entries = {
+        std::vector<propico::engine::SyncRow> remote_entries = {
             {"shared:id", 10, local_time + 1000},  // より新しいタイムスタンプ
         };
         history_->merge_entries(remote_entries);
@@ -103,7 +103,7 @@ public:
     }
 
 private:
-    std::unique_ptr<pobox::engine::History> history_;
+    std::unique_ptr<propico::engine::History> history_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SyncTest);

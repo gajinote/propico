@@ -6,7 +6,7 @@
 
 #include "candidate.h"
 
-namespace pobox::engine {
+namespace propico::engine {
 
 // TSV 辞書ファイル（読み\t表記\t基本スコア）を読み込み、
 // プレフィックス前方一致で候補を返す辞書クラス
@@ -27,4 +27,4 @@ private:
     std::vector<Candidate> entries_;
 };
 
-} // namespace pobox::engine
+} // namespace propico::engine

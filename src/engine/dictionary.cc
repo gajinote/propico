@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string_view>
 
-namespace pobox::engine {
+namespace propico::engine {
 
 namespace {
 
@@ -84,4 +84,4 @@ std::vector<Candidate> Dictionary::search(const std::string& prefix,
     return result;
 }
 
-} // namespace pobox::engine
+} // namespace propico::engine

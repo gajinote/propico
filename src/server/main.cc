@@ -3,7 +3,7 @@
 #include <string>
 
 #include <grpcpp/grpcpp.h>
-#include "pobox.grpc.pb.h"
+#include "propico.grpc.pb.h"
 
 #include "dictionary.h"
 #include "history.h"
@@ -11,14 +11,14 @@
 
 static constexpr std::size_t kDefaultMaxCandidates = 10;
 
-class PoBoxServiceImpl final : public pobox::PoBox::Service {
+class PropicoServiceImpl final : public propico::Propico::Service {
 public:
-    explicit PoBoxServiceImpl(pobox::engine::Dictionary dict, const std::string& db_path)
+    explicit PropicoServiceImpl(propico::engine::Dictionary dict, const std::string& db_path)
         : dict_(std::move(dict)), scorer_(), history_(db_path) {}
 
     grpc::Status Search(grpc::ServerContext* /*context*/,
-                        const pobox::SearchRequest* request,
-                        pobox::SearchResponse* response) override {
+                        const propico::SearchRequest* request,
+                        propico::SearchResponse* response) override {
         const auto& prefix = request->prefix();
         std::cout << "A search request for '" << prefix << "' was received\n";
 
@@ -43,8 +43,8 @@ public:
     }
 
     grpc::Status Learn(grpc::ServerContext* /*context*/,
-                       const pobox::LearnRequest* request,
-                       pobox::LearnResponse* response) override {
+                       const propico::LearnRequest* request,
+                       propico::LearnResponse* response) override {
         const auto& id     = request->candidate_id();
         const auto& prefix = request->prefix();
         std::cout << "A learn request for candidate_id='" << id << "' was received\n";
@@ -59,8 +59,8 @@ public:
     }
 
     grpc::Status Sync(grpc::ServerContext* /*context*/,
-                      const pobox::SyncRequest* request,
-                      pobox::SyncResponse* response) override {
+                      const propico::SyncRequest* request,
+                      propico::SyncResponse* response) override {
         const auto  last_sync_ts = request->last_sync_timestamp();
         const auto  server_ts    = static_cast<std::int64_t>(std::time(nullptr));
         std::cout << "A sync request was received (last_sync_timestamp=" << last_sync_ts
@@ -81,17 +81,17 @@ public:
     }
 
 private:
-    pobox::engine::Dictionary dict_;
-    pobox::engine::Scorer     scorer_;
-    pobox::engine::History    history_;
+    propico::engine::Dictionary dict_;
+    propico::engine::Scorer     scorer_;
+    propico::engine::History    history_;
 };
 
 int main(int argc, char* argv[]) {
     const std::string dict_path = (argc >= 2) ? argv[1] : "dict/default.tsv";
-    const std::string db_path   = (argc >= 3) ? argv[2] : "pobox_history.db";
+    const std::string db_path   = (argc >= 3) ? argv[2] : "propico_history.db";
     const std::string address   = "0.0.0.0:50051";
 
-    pobox::engine::Dictionary dict;
+    propico::engine::Dictionary dict;
     try {
         dict.load(dict_path);
         std::cout << "Dictionary loaded: " << dict.size() << " entries from "
@@ -100,14 +100,14 @@ int main(int argc, char* argv[]) {
         std::cerr << "[warn] " << e.what() << " — starting with empty dictionary\n";
     }
 
-    PoBoxServiceImpl service(std::move(dict), db_path);
+    PropicoServiceImpl service(std::move(dict), db_path);
     std::cout << "History database: " << db_path << "\n";
     grpc::ServerBuilder builder;
     builder.AddListeningPort(address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);
 
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-    std::cout << "PoBox server listening on " << address << "\n";
+    std::cout << "Propico server listening on " << address << "\n";
     server->Wait();
     return 0;
 }

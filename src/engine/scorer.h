@@ -6,7 +6,7 @@
 
 #include "candidate.h"
 
-namespace pobox::engine {
+namespace propico::engine {
 
 // 辞書スコアと学習 boost を統合してスコアを確定させる
 //
@@ -31,4 +31,4 @@ private:
     float decay_factor_;
 };
 
-} // namespace pobox::engine
+} // namespace propico::engine

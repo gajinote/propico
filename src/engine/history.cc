@@ -6,7 +6,7 @@
 
 #include <sqlite3.h>
 
-namespace pobox::engine {
+namespace propico::engine {
 
 namespace {
 
@@ -173,4 +173,4 @@ void History::merge_entries(const std::vector<SyncRow>& entries) {
     }
 }
 
-} // namespace pobox::engine
+} // namespace propico::engine

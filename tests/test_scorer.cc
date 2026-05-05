@@ -21,7 +21,7 @@ class ScorerTest : public CppUnit::TestFixture {
 
 public:
     void setUp() override {
-        scorer_ = pobox::engine::Scorer(/*decay_factor=*/0.1f);
+        scorer_ = propico::engine::Scorer(/*decay_factor=*/0.1f);
     }
 
     // 選択回数 0 → boost は 0
@@ -42,7 +42,7 @@ public:
 
     // boost_map が空のとき final_score == base_score
     void test_apply_no_boost() {
-        std::vector<pobox::engine::Candidate> candidates = {make_candidate("a:X", 0.8f)};
+        std::vector<propico::engine::Candidate> candidates = {make_candidate("a:X", 0.8f)};
         std::unordered_map<std::string, int>  boost_map;
 
         auto result = scorer_.apply(candidates, boost_map);
@@ -51,7 +51,7 @@ public:
 
     // boost_map にある候補は final_score が上昇する
     void test_apply_with_boost() {
-        std::vector<pobox::engine::Candidate> candidates = {make_candidate("a:X", 0.5f)};
+        std::vector<propico::engine::Candidate> candidates = {make_candidate("a:X", 0.5f)};
         std::unordered_map<std::string, int>  boost_map  = {{"a:X", 10}};
 
         auto result = scorer_.apply(candidates, boost_map);
@@ -60,7 +60,7 @@ public:
 
     // 結果は final_score 降順
     void test_apply_sorted_descending() {
-        std::vector<pobox::engine::Candidate> candidates = {
+        std::vector<propico::engine::Candidate> candidates = {
             make_candidate("a:A", 0.5f),
             make_candidate("a:B", 0.9f),
             make_candidate("a:C", 0.7f),
@@ -75,7 +75,7 @@ public:
 
     // boost_map に存在しない id は boost = 0 のまま
     void test_apply_unknown_id_ignored() {
-        std::vector<pobox::engine::Candidate> candidates = {make_candidate("a:X", 0.8f)};
+        std::vector<propico::engine::Candidate> candidates = {make_candidate("a:X", 0.8f)};
         std::unordered_map<std::string, int>  boost_map  = {{"unknown:Y", 99}};
 
         auto result = scorer_.apply(candidates, boost_map);
@@ -83,8 +83,8 @@ public:
     }
 
 private:
-    static pobox::engine::Candidate make_candidate(const std::string& id, float base_score) {
-        pobox::engine::Candidate c;
+    static propico::engine::Candidate make_candidate(const std::string& id, float base_score) {
+        propico::engine::Candidate c;
         c.id         = id;
         c.text       = id;
         c.reading    = id;
@@ -93,7 +93,7 @@ private:
         return c;
     }
 
-    pobox::engine::Scorer scorer_;
+    propico::engine::Scorer scorer_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ScorerTest);

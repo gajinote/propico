@@ -1,8 +1,8 @@
-# pobox-neo
+# Propico
 
 ## POBox を C++ で現代（2026）風に再実装
 
-**pobox-neo** は、1996年にソニーCSL の増井俊之によって開発された予測式日本語入力エンジン「POBox」を、最新の C++20 で再実装したプロジェクトです。
+**Propico** は、1996年にソニーCSL の増井俊之によって開発された予測式日本語入力エンジン「POBox」を、最新の C++20 で再実装したプロジェクトです。
 
 POBox の根幹にある設計思想 ― **品詞解析を捨てた軽量エンジン × 使用頻度ベースの動的学習 × 低リソース環境への徹底特化** ― を現代の C++ と gRPC で再現することを目指します。
 
@@ -30,7 +30,7 @@ POBox のアーキテクチャは、フロントエンド予測とバックエ�
 ```
 クライアント (CLI)                サーバー (gRPC エンジン)
 ┌─────────────────────┐            ┌───────────────────────────────┐
-│ pobox_client        │ gRPC       │  変換エンジン                  │
+│ propico_client        │ gRPC       │  変換エンジン                  │
 │                     │            │ ┌──────────┐ ┌──────────────┐ │
 │ ・Search (prefix)   │ ─────────▶ │ │ 辞書検索 │ │ 学習履歴     │ │
 │ ・Learn (id)        │ ◀────────  │ │(前方一致)│ │ (SQLite DB) │ │
@@ -51,7 +51,7 @@ POBox のアーキテクチャは、フロントエンド予測とバックエ�
 | 動的ランキング | 選択頻度が高い候補が上位に昇格し、使えば使うほど効率が上がる |
 | 最小辞書設計 | デフォルト辞書は意図的に絞り込み、ドメイン特化辞書を追加できる拡張構造にする |
 
-### gRPC サービス定義（`pobox.proto`）
+### gRPC サービス定義（`propico.proto`）
 
 | RPC | 用途 | 実装 |
 |---|---|---|
@@ -64,9 +64,9 @@ POBox のアーキテクチャは、フロントエンド予測とバックエ�
 ## ディレクトリ構成
 
 ```
-pobox-neo/
+Propico/
 ├── CMakeLists.txt
-├── pobox.proto              ← gRPC サービス定義
+├── propico.proto              ← gRPC サービス定義
 ├── dict/
 │   └── default.tsv          ← デフォルト辞書（読み\t表記\tスコア）
 ├── src/
@@ -89,8 +89,8 @@ pobox-neo/
 
 #### `engine/candidate.h` — 内部 Candidate 型
 
-`pobox::engine::Candidate` は辞書検索からスコア確定までの内部表現です。
-proto の `pobox::Candidate` とは独立しており、サーバーが RPC レスポンスを構築する際に変換します。
+`propico::engine::Candidate` は辞書検索からスコア確定までの内部表現です。
+proto の `propico::Candidate` とは独立しており、サーバーが RPC レスポンスを構築する際に変換します。
 
 ```cpp
 struct Candidate {
@@ -208,16 +208,16 @@ ctest --test-dir build --output-on-failure
 ### 1. サーバー起動
 
 ```bash
-./build/pobox_server dict/default.tsv pobox_history.db
-# → PoBox server listening on 0.0.0.0:50051
+./build/propico_server dict/default.tsv propico_history.db
+# → Propico server listening on 0.0.0.0:50051
 # → Dictionary loaded: 190 entries
-# → History database: pobox_history.db
+# → History database: propico_history.db
 ```
 
 ### 2. 検索（Search RPC）
 
 ```bash
-./build/pobox_client search "あい"
+./build/propico_client search "あい"
 # → 愛  [あい]  score=0.95
 # → 挨拶  [あいさつ]  score=0.9
 # → 相手  [あいて]  score=0.88
@@ -227,7 +227,7 @@ ctest --test-dir build --output-on-failure
 ### 3. 学習記録（Learn RPC）
 
 ```bash
-./build/pobox_client learn "あい:愛" "あい"
+./build/propico_client learn "あい:愛" "あい"
 # → Learned: あい:愛 (prefix: あい)
 ```
 
@@ -235,9 +235,9 @@ ctest --test-dir build --output-on-failure
 
 ```bash
 # サーバー再起動（SQLite データベースは保持）
-./build/pobox_server dict/default.tsv pobox_history.db
+./build/propico_server dict/default.tsv propico_history.db
 
-./build/pobox_client search "あい"
+./build/propico_client search "あい"
 # → 愛  [あい]  score=1.01931  ← boost が加算されている
 # → 挨拶  [あいさつ]  score=0.9
 # → ...
@@ -249,23 +249,23 @@ ctest --test-dir build --output-on-failure
 
 ```bash
 # クライアント1: 全データ取得（初期同期）
-./build/pobox_client sync 0
+./build/propico_client sync 0
 # → server_timestamp=1775890026
 # → entries=0
 
 # クライアント1: 学習記録
-./build/pobox_client learn "あい:愛" "あい"
+./build/propico_client learn "あい:愛" "あい"
 
 # クライアント2: 差分取得
-./build/pobox_client sync 1775890026
+./build/propico_client sync 1775890026
 # → server_timestamp=1775890027
 # → entries=0  ← 差分なし（前回のタイムスタンプより新しい Learn がない）
 
 # クライアント1: さらに学習
-./build/pobox_client learn "あい:愛" "あい"
+./build/propico_client learn "あい:愛" "あい"
 
 # クライアント2: 差分確認
-./build/pobox_client sync 1775890026
+./build/propico_client sync 1775890026
 # → server_timestamp=1775890028
 # → entries=1
 # →   あい:愛  count=2  updated_at=1775890027
@@ -301,5 +301,5 @@ POBox の原論文: [増井俊之, "An Efficient Text Input Method for Handheld 
 ## 関連リソース
 
 - [PLAN.md](PLAN.md) — 実装計画（フェーズ別の詳細）
-- [POBOX-ARCH.md](POBOX-ARCH.md) — 設計ドキュメント（理論的背景）
-- [pobox.proto](pobox.proto) — gRPC サービス定義
+- [PROPICO-ARCH.md](PROPICO-ARCH.md) — 設計ドキュメント（理論的背景）
+- [propico.proto](propico.proto) — gRPC サービス定義

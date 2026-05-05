@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package pobox;
+package propico;
 
-option java_package = "jp.pobox.proto";
+option java_package = "jp.propico.proto";
 option java_multiple_files = true;
 option objc_class_prefix = "PBX";
 
 // POBox 予測入力エンジン サービス定義
-service PoBox {
+service Propico {
   // 入力中の文字列（プレフィックス）から候補リストを返す
   rpc Search(SearchRequest) returns (SearchResponse);
 

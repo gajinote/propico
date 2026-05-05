@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(pobox-neo VERSION 0.1.0 LANGUAGES CXX)
+project(Propico VERSION 0.1.0 LANGUAGES CXX)
 
 # -----------------------------------------------------------------------
 # 言語標準
@@ -19,7 +19,7 @@ find_package(SQLite3 REQUIRED)
 # -----------------------------------------------------------------------
 # Protocol Buffers / gRPC コード生成
 # -----------------------------------------------------------------------
-set(PROTO_FILE "${CMAKE_CURRENT_SOURCE_DIR}/pobox.proto")
+set(PROTO_FILE "${CMAKE_CURRENT_SOURCE_DIR}/propico.proto")
 set(PROTO_OUT  "${CMAKE_CURRENT_BINARY_DIR}/proto")
 file(MAKE_DIRECTORY "${PROTO_OUT}")
 
@@ -43,12 +43,12 @@ if(NOT GRPC_CPP_PLUGIN)
 endif()
 
 set(PROTO_SRCS
-    "${PROTO_OUT}/pobox.pb.cc"
-    "${PROTO_OUT}/pobox.grpc.pb.cc"
+    "${PROTO_OUT}/propico.pb.cc"
+    "${PROTO_OUT}/propico.grpc.pb.cc"
 )
 set(PROTO_HDRS
-    "${PROTO_OUT}/pobox.pb.h"
-    "${PROTO_OUT}/pobox.grpc.pb.h"
+    "${PROTO_OUT}/propico.pb.h"
+    "${PROTO_OUT}/propico.grpc.pb.h"
 )
 
 add_custom_command(
@@ -60,14 +60,14 @@ add_custom_command(
             "--plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}"
             "${PROTO_FILE}"
     DEPENDS "${PROTO_FILE}"
-    COMMENT "Generating C++ from pobox.proto"
+    COMMENT "Generating C++ from propico.proto"
     VERBATIM
 )
 
 # 生成コードをまとめたライブラリ
-add_library(pobox_proto STATIC ${PROTO_SRCS} ${PROTO_HDRS})
-target_include_directories(pobox_proto PUBLIC "${PROTO_OUT}")
-target_link_libraries(pobox_proto
+add_library(propico_proto STATIC ${PROTO_SRCS} ${PROTO_HDRS})
+target_include_directories(propico_proto PUBLIC "${PROTO_OUT}")
+target_link_libraries(propico_proto
     PUBLIC
         protobuf::libprotobuf
         gRPC::grpc++
@@ -76,35 +76,35 @@ target_link_libraries(pobox_proto
 # -----------------------------------------------------------------------
 # 予測エンジン
 # -----------------------------------------------------------------------
-add_library(pobox_engine STATIC
+add_library(propico_engine STATIC
     src/engine/dictionary.cc
     src/engine/scorer.cc
     src/engine/history.cc
 )
-target_include_directories(pobox_engine PUBLIC src/engine)
-target_link_libraries(pobox_engine PUBLIC pobox_proto SQLite::SQLite3)
+target_include_directories(propico_engine PUBLIC src/engine)
+target_link_libraries(propico_engine PUBLIC propico_proto SQLite::SQLite3)
 
 # -----------------------------------------------------------------------
 # サーバー
 # -----------------------------------------------------------------------
-add_executable(pobox_server
+add_executable(propico_server
     src/server/main.cc
 )
-target_link_libraries(pobox_server
+target_link_libraries(propico_server
     PRIVATE
-        pobox_engine
+        propico_engine
         Threads::Threads
 )
 
 # -----------------------------------------------------------------------
 # クライアント
 # -----------------------------------------------------------------------
-add_executable(pobox_client
+add_executable(propico_client
     src/client/main.cc
 )
-target_link_libraries(pobox_client
+target_link_libraries(propico_client
     PRIVATE
-        pobox_proto
+        propico_proto
         Threads::Threads
 )
 
@@ -118,14 +118,14 @@ if(CppUnit_FOUND OR TARGET CppUnit::CppUnit)
 
     file(GLOB_RECURSE TEST_SRCS "tests/*.cc")
     if(TEST_SRCS)
-        add_executable(pobox_tests ${TEST_SRCS})
-        target_link_libraries(pobox_tests
+        add_executable(propico_tests ${TEST_SRCS})
+        target_link_libraries(propico_tests
             PRIVATE
-                pobox_engine
+                propico_engine
                 CppUnit::CppUnit
                 Threads::Threads
         )
-        add_test(NAME pobox_tests COMMAND pobox_tests)
+        add_test(NAME propico_tests COMMAND propico_tests)
     endif()
 else()
     # pkg-config 経由でも探す
@@ -139,15 +139,15 @@ else()
 
         file(GLOB_RECURSE TEST_SRCS "tests/*.cc")
         if(TEST_SRCS)
-            add_executable(pobox_tests ${TEST_SRCS})
-            target_include_directories(pobox_tests PRIVATE ${CPPUNIT_INCLUDE_DIRS})
-            target_link_libraries(pobox_tests
+            add_executable(propico_tests ${TEST_SRCS})
+            target_include_directories(propico_tests PRIVATE ${CPPUNIT_INCLUDE_DIRS})
+            target_link_libraries(propico_tests
                 PRIVATE
-                    pobox_engine
+                    propico_engine
                     ${CPPUNIT_LIBRARIES}
                     Threads::Threads
             )
-            add_test(NAME pobox_tests COMMAND pobox_tests)
+            add_test(NAME propico_tests COMMAND propico_tests)
         endif()
     else()
         message(STATUS "CppUnit not found — test target skipped")
