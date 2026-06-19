@@ -26,6 +26,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 | テスト (CPPUnit) | ✅ 完了（Dictionary 9件 + History 6件 + Scorer 7件 + Sync 6件、全28件） |
 | 学習機能（SQLite 永続化） | ✅ 完了 |
 | 同期機能（Sync RPC） | ✅ 完了 |
+| Search RPC 辞書検索・fcitx-propico 連携対応 | ✅ 完了 |
 
 ---
 
@@ -164,10 +165,31 @@ ctest --test-dir build
 
 ---
 
+### Phase 6 — fcitx-propico 連携対応（完了 ✅）
+
+**目標:** 外部プロジェクト fcitx-propico が Search RPC を呼び出して実際の変換候補を取得できる状態にする。
+
+- [x] Search RPC ハンドラーで辞書検索を実装し、実際の変換候補を返す
+  - `dict_.search(prefix, limit*2)` → `scorer_.apply(candidates, history_.load_boost_map())` → `limit` 件に絞って `SearchResponse` に設定（`src/server/main.cc`）
+- [x] `build/` ディレクトリから起動したときも辞書ファイルが正しく読み込まれるよう修正
+  - `cmake -B build` の configure 時に `build/dict` → `../dict` シンボリックリンクを生成（`CMakeLists.txt`）
+  - 修正前は `dict/default.tsv` の相対パスが解決できず空辞書で起動していた
+
+**動作確認済み:**
+
+```bash
+# build/ から起動しても辞書が読み込まれる
+cd build && ./propico_server
+./propico_client search "あい"
+# → 愛 [あい] score=0.95 / 挨拶 [あいさつ] score=0.90 / ...
+```
+
+---
+
 ## 優先順位と依存関係
 
 ```
-Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅
+Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅ → Phase 6 ✅
 ```
 
 **全フェーズ完了**
