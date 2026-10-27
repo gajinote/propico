@@ -10,7 +10,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 
 ---
 
-## 現状 (2026-04-11) — **全フェーズ完了** ✅
+## 現状 (2026-10-27) — **全フェーズ完了** ✅
 
 | 成果物 | 状態 |
 |---|---|
@@ -22,7 +22,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 | `src/engine/dictionary.h/.cc` | ✅ 完了（TSV 読み込み・前方一致検索） |
 | `src/engine/scorer.h/.cc` | ✅ 完了（boost 計算・final_score 降順ソート） |
 | `src/engine/history.h/.cc` | ✅ 完了（SQLite ラッパー・学習とSync機能） |
-| `dict/default.tsv` | ✅ 完了（日本語サンプル辞書 約190語） |
+| `dict/default.tsv` | ✅ 完了（winpobox 静的辞書をインポート、約63,000 行） |
 | テスト (CPPUnit) | ✅ 完了（Dictionary 9件 + History 6件 + Scorer 7件 + Sync 6件、全28件） |
 | 学習機能（SQLite 永続化） | ✅ 完了 |
 | 同期機能（Sync RPC） | ✅ 完了 |
@@ -46,7 +46,7 @@ POBox のアーキテクチャ上の核心は以下の三点である。
 - [x] `src/engine/dictionary.h/.cc` — TSV 辞書の読み込み・前方一致検索
 - [x] `src/engine/scorer.h/.cc` — `log(1+count) × decay_factor` による boost 計算
 - [x] `src/server/main.cc` — Search RPC に辞書検索を接続
-- [x] `dict/default.tsv` — 日本語サンプル辞書（約190語）
+- [x] `dict/default.tsv` — 日本語サンプル辞書（約190語。後に winpobox 静的辞書 約63,000 行へ置換）
 
 **動作確認済み:**
 ```bash
@@ -198,6 +198,19 @@ Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅ → 
 
 ## コミット履歴
 
+- `39a6be7` - import from winpobox static dictionary
+- `fb0ca0c` - add Phase6 fcitx-propico correspond
+- `a311fca` - execute available in build directory
+- `8bb8f03` - Project Name changed. from pobox-neo to Propico
+- `62bff4e` - Correction link of paper
+- `952e60b` - RPC table 未実装対応
+- `e69f880` - resolved SERVER ADDRESS hatd-cord
+- `3af097e` - illegal try catch respond
+- `e53d6ee` - SQL 文字生存保障性を保証
+- `2debca2` - dictionary.cc std::from_chars() 戻り値無視 Correction
+- `b09a1b4` - thread 安全性確保
+- `bf317a7` - sqlite3_prepare_v2 のエラーチェック
+- `d2f56fe` - error correction merge_entries() SQL
 - `2fe991b` - implement Phase 5: Sync RPC for multi-device learning data synchronization
 - `a1e0f60` - update PLAN.md: document Phase 3 completion and verify implementation details
 - `198b748` - enhance client: add Learn RPC support for testing
