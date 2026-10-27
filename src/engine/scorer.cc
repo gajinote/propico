@@ -21,8 +21,7 @@ std::vector<Candidate> Scorer::apply(
         }
     }
 
-    std::ranges::sort(candidates, std::greater<>{},
-                      [](const Candidate& c) { return c.final_score(); });
+    std::ranges::stable_sort(candidates, ranks_before);
 
     return candidates;
 }

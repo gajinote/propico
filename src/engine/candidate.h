@@ -17,4 +17,11 @@ struct Candidate {
     [[nodiscard]] float final_score() const noexcept { return base_score + boost; }
 };
 
+// 候補の表示順序: final_score 降順 → 読みが短い（入力に近い）順
+// 同順位は std::stable_sort により辞書の並びが保たれる
+inline bool ranks_before(const Candidate& a, const Candidate& b) noexcept {
+    if (a.final_score() != b.final_score()) return a.final_score() > b.final_score();
+    return a.reading.size() < b.reading.size();
+}
+
 } // namespace propico::engine

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -26,7 +27,13 @@ public:
                                       ? request->max_candidates()
                                       : kDefaultMaxCandidates;
 
-        auto candidates = dict_.search(prefix, limit * 2);
+        // 件数制限は学習 boost を反映した後に掛ける
+        auto candidates = dict_.search(prefix);
+        for (auto& c : dict_.search_with_particle(prefix)) {
+            const bool dup = std::any_of(candidates.begin(), candidates.end(),
+                                         [&](const auto& e) { return e.id == c.id; });
+            if (!dup) candidates.push_back(std::move(c));
+        }
         candidates      = scorer_.apply(std::move(candidates), history_.load_boost_map());
 
         // 件数を limit に絞る

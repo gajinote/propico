@@ -20,6 +20,11 @@ public:
     [[nodiscard]] std::vector<Candidate> search(const std::string& prefix,
                                                 std::size_t        max_results = 0) const;
 
+    // prefix が「語 + 助詞」で終わるとき、語の読みに完全一致する候補へ助詞を付けた
+    // 複合候補を返す（例: "ほんじつは" → 「本日は」）。該当しなければ空
+    // 品詞解析は行わず、助詞リストとの末尾一致のみで判定する
+    [[nodiscard]] std::vector<Candidate> search_with_particle(const std::string& prefix) const;
+
     [[nodiscard]] std::size_t size() const noexcept { return entries_.size(); }
 
 private:

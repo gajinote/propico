@@ -4,6 +4,7 @@
 #include <charconv>
 #include <fstream>
 #include <ranges>
+#include <array>
 #include <stdexcept>
 #include <string_view>
 
@@ -43,6 +44,14 @@ std::optional<Candidate> parse_line(std::string_view line) {
     return c;
 }
 
+// 末尾で分離する助詞（長いものを先に判定する）
+constexpr std::array<std::string_view, 12> kParticles = {
+    "から", "まで", "より", "は", "が", "を", "に", "の", "で", "と", "も", "へ",
+};
+
+// 複合候補は単独の語より少し下げる
+constexpr float kParticleScoreFactor = 0.9f;
+
 } // namespace
 
 void Dictionary::load(const std::filesystem::path& tsv_path) {
@@ -60,7 +69,7 @@ void Dictionary::load(const std::filesystem::path& tsv_path) {
     }
 
     // reading の昇順にソート（binary search のため）
-    std::ranges::sort(entries_, {}, &Candidate::reading);
+    std::ranges::stable_sort(entries_, {}, &Candidate::reading);
 }
 
 std::vector<Candidate> Dictionary::search(const std::string& prefix,
@@ -70,17 +79,39 @@ std::vector<Candidate> Dictionary::search(const std::string& prefix,
     // prefix 以上の最初のエントリを binary search で探す
     auto it = std::ranges::lower_bound(entries_, prefix, {}, &Candidate::reading);
 
+    // 件数制限は並べ替えの後に掛ける（読み順の先頭だけが残るのを避ける）
     std::vector<Candidate> result;
     for (; it != entries_.end(); ++it) {
         if (!it->reading.starts_with(prefix)) break;
         result.push_back(*it);
-        if (max_results != 0 && result.size() >= max_results) break;
     }
 
-    // final_score 降順にソート
-    std::ranges::sort(result, std::greater<>{},
-                      [](const Candidate& c) { return c.final_score(); });
+    std::ranges::stable_sort(result, ranks_before);
+    if (max_results != 0 && result.size() > max_results) result.resize(max_results);
 
+    return result;
+}
+
+std::vector<Candidate> Dictionary::search_with_particle(const std::string& prefix) const {
+    std::vector<Candidate> result;
+    const std::string_view input = prefix;
+
+    for (const auto particle : kParticles) {
+        if (input.size() <= particle.size() || !input.ends_with(particle)) continue;
+
+        const std::string stem(input.substr(0, input.size() - particle.size()));
+        auto range = std::ranges::equal_range(entries_, stem, {}, &Candidate::reading);
+        for (const auto& e : range) {
+            Candidate c = e;
+            c.reading    = prefix;
+            c.text      += particle;
+            c.id         = c.reading + ':' + c.text;
+            c.base_score = e.base_score * kParticleScoreFactor;
+            result.push_back(std::move(c));
+        }
+    }
+
+    std::ranges::stable_sort(result, ranks_before);
     return result;
 }
 
